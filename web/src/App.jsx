@@ -7,6 +7,7 @@ import { SearchDialog } from './components/SearchDialog'
 import { usePosts } from './hooks/usePosts'
 import { useTheme } from './hooks/useTheme'
 import { AboutPage } from './pages/AboutPage'
+import { ArticleDetailPage } from './pages/ArticleDetailPage'
 import { ArticlesPage } from './pages/ArticlesPage'
 import { CategoriesPage } from './pages/CategoriesPage'
 import { FriendsPage } from './pages/FriendsPage'
@@ -31,7 +32,8 @@ function App() {
   }, [location.pathname])
 
   const showToast = () => {
-    setToast('管理入口还在生长中，敬请期待。')
+    setToast('正在前往内容管理端…')
+    window.location.assign('/admin/')
     window.setTimeout(() => setToast(''), 2600)
   }
 
@@ -46,6 +48,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage posts={posts} status={status} />} />
           <Route path="/articles" element={<ArticlesPage posts={posts} status={status} retry={retry} searchQuery={searchQuery} onClearSearch={() => navigate('/articles')} />} />
+          <Route path="/articles/:slug" element={<ArticleDetailPage />} />
           <Route path="/categories" element={<CategoriesPage posts={posts} />} />
           <Route path="/tags" element={<TagsPage posts={posts} />} />
           <Route path="/moments" element={<MomentsPage />} />

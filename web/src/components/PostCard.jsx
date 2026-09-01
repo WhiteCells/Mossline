@@ -14,18 +14,19 @@ function CoverArt({ variant, title }) {
 }
 
 export function PostCard({ post, index }) {
+  const path = `/articles/${encodeURIComponent(post.slug)}`
   return (
     <article className={`post-card ${index % 2 ? 'is-reversed' : ''}`}>
-      <Link className="post-cover" to={`/articles?q=${encodeURIComponent(post.title)}`} aria-label={`查看《${post.title}》`}>
-        <CoverArt variant={post.cover} title={post.title} />
+      <Link className="post-cover" to={path} aria-label={`查看《${post.title}》`}>
+        {post.cover?.startsWith('/') || post.cover?.startsWith('http') ? <img className="post-cover-image" src={post.cover} alt="" loading="lazy" /> : <CoverArt variant={post.cover} title={post.title} />}
         <span className="post-number">/ {post.id}</span>
       </Link>
       <div className="post-content">
         <div className="post-topline">
           <span>{post.category}</span>
-          <time dateTime={post.published_at}>{post.published_at.replaceAll('-', '.')}</time>
+          <time dateTime={post.published_at}>{post.published_at ? post.published_at.slice(0, 10).replaceAll('-', '.') : '尚未发布'}</time>
         </div>
-        <h3><Link to={`/articles?q=${encodeURIComponent(post.title)}`}>{post.title}</Link></h3>
+        <h3><Link to={path}>{post.title}</Link></h3>
         <p>{post.desc}</p>
         <div className="post-tags">
           {post.is_top && <span className="top-tag"><Icon name="spark" size={13} /> 置顶</span>}
@@ -37,7 +38,7 @@ export function PostCard({ post, index }) {
             <span><Icon name="eye" size={15} /> {post.view_count.toLocaleString()}</span>
             <span><Icon name="message" size={15} /> {post.comments_count}</span>
           </div>
-          <Link className="read-more" to={`/articles?q=${encodeURIComponent(post.title)}`}><span>查看文章</span><Icon name="arrow" size={18} /></Link>
+          <Link className="read-more" to={path}><span>查看文章</span><Icon name="arrow" size={18} /></Link>
         </div>
       </div>
     </article>

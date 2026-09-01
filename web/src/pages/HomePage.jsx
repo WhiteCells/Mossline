@@ -20,7 +20,7 @@ export function HomePage({ posts, status }) {
         </div>
         {status === 'success' && <Link className="page-link-button" to="/articles">查看全部文章 <Icon name="arrow" size={18} /></Link>}
       </section>
-      <DiscoverSection />
+      <DiscoverSection posts={posts} />
       <Newsletter />
     </>
   )

@@ -2,13 +2,13 @@ import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PageHero } from '../components/PageHero'
 import { PostCollection } from '../components/PostCollection'
-import { tags } from '../data/posts'
 
 export function TagsPage({ posts }) {
   const [params, setParams] = useSearchParams()
+  const tags = useMemo(() => [...new Set(posts.flatMap((post) => post.tags))], [posts])
   const requested = params.get('name')
-  const active = tags.includes(requested) ? requested : tags[0]
-  const counts = useMemo(() => Object.fromEntries(tags.map((tag) => [tag, posts.filter((post) => post.tags.includes(tag)).length])), [posts])
+  const active = tags.includes(requested) ? requested : tags[0] || ''
+  const counts = Object.fromEntries(tags.map((tag) => [tag, posts.filter((post) => post.tags.includes(tag)).length]))
   const filtered = posts.filter((post) => post.tags.includes(active))
 
   return (

@@ -1181,6 +1181,33 @@ input:focus-visible {
   overflow: hidden;
 }
 
+.post-cover-image { width:100%; height:100%; object-fit:cover; }
+.friend-mark img { width:100%; height:100%; object-fit:cover; border-radius:inherit; }
+.article-detail { min-height:70vh; padding-top:calc(var(--header-height) + 70px); padding-bottom:100px; }
+.article-back { display:inline-flex; align-items:center; gap:7px; margin-bottom:38px; color:var(--muted); font-size:13px; }
+.article-back svg { transform:rotate(180deg); }
+.article-detail-header { width:min(850px,100%); margin:0 auto 46px; text-align:center; }
+.article-detail-header h1 { margin:18px 0; color:var(--heading); font:600 clamp(2.2rem,6vw,4.6rem)/1.18 var(--serif); }
+.article-detail-header>p { color:var(--muted); font-size:1.05rem; line-height:1.8; }
+.article-meta { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin:25px 0; color:var(--muted); font-size:12px; }
+.article-meta span { display:flex; align-items:center; gap:5px; }
+.article-detail-header .post-tags { justify-content:center; }
+.article-cover { width:min(980px,100%); max-height:560px; display:block; object-fit:cover; margin:0 auto 52px; border-radius:24px; box-shadow:var(--shadow-lg); }
+.markdown-content { width:min(790px,100%); margin-inline:auto; color:var(--text); font:400 1rem/2 var(--serif); overflow-wrap:anywhere; }
+.markdown-content h1,.markdown-content h2,.markdown-content h3 { margin:2em 0 .7em; color:var(--heading); line-height:1.4; }
+.markdown-content h1 { font-size:2rem; }.markdown-content h2 { font-size:1.55rem; }.markdown-content h3 { font-size:1.25rem; }
+.markdown-content p,.markdown-content ul,.markdown-content ol,.markdown-content blockquote { margin:1.2em 0; }
+.markdown-content blockquote { padding:12px 20px; color:var(--muted); background:var(--bg-soft); border-left:3px solid var(--sage); border-radius:0 12px 12px 0; }
+.markdown-content pre { overflow:auto; padding:20px; color:#e8ece9; background:#202622; border-radius:14px; font:13px/1.7 ui-monospace,monospace; }
+.markdown-content code:not(pre code) { padding:2px 6px; background:var(--bg-soft); border-radius:5px; font:13px ui-monospace,monospace; }
+.markdown-content img { max-width:100%; height:auto; display:block; margin:30px auto; border-radius:16px; }
+.markdown-content table { width:100%; display:block; overflow:auto; border-collapse:collapse; }
+.markdown-content th,.markdown-content td { padding:9px 12px; border:1px solid var(--line); }
+.markdown-content a { color:var(--accent-deep); text-decoration:underline; text-underline-offset:3px; }
+.about-live { min-height:360px; padding-block:80px; }
+.moment-images { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:18px; }
+.moment-images img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; }
+
 .is-reversed .post-cover {
   order: 2;
 }

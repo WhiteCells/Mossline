@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { categories, tags } from '../data/posts'
 import { Icon } from './Icon'
 
-export function DiscoverSection() {
+export function DiscoverSection({ posts }) {
   const [liked, setLiked] = useState(false)
   const navigate = useNavigate()
+  const categories = [...new Set(posts.map((post) => post.category))].slice(0, 4).map((name, index) => ({ name, count: posts.filter((post) => post.category === name).length, color: ['pink', 'blue', 'green', 'amber'][index] }))
+  const tags = [...new Set(posts.flatMap((post) => post.tags))].slice(0, 10)
 
   return (
     <section className="discover-section">
@@ -34,15 +35,15 @@ export function DiscoverSection() {
           </article>
 
           <article className="moment-panel">
-            <div className="moment-date"><strong>31</strong><span>AUG<br />2026</span></div>
+            <div className="moment-date"><strong>—</strong><span>LIVE<br />NOW</span></div>
             <div className="moment-art"><span className="moment-sun" /><span className="moment-hill one" /><span className="moment-hill two" /></div>
             <div className="moment-copy">
               <span className="eyebrow"><i /> TODAY'S MOMENT</span>
-              <blockquote>“晚风路过窗台，<br />把八月最后一页轻轻合上。”</blockquote>
-              <p>今日份的小小记录 · 上海</p>
+              <blockquote>“每一篇文字，<br />都从真实的数据里抵达。”</blockquote>
+              <p>内容由 Mossline API 实时提供</p>
             </div>
             <button className={`like-button ${liked ? 'is-liked' : ''}`} onClick={() => setLiked((value) => !value)} aria-label={liked ? '取消喜欢' : '喜欢这条动态'}>
-              <Icon name="heart" size={18} /> <span>{liked ? 129 : 128}</span>
+              <Icon name="heart" size={18} /> <span>{liked ? 1 : 0}</span>
             </button>
           </article>
         </div>
