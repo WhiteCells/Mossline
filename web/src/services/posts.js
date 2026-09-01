@@ -13,8 +13,13 @@ function normalizePost(post) {
 }
 
 export async function getPosts({ signal, query } = {}) {
-  const data = await apiGet('/api/post', { query: { page: 1, size: 100, ...query }, signal })
-  return normalizeList(data, ['items', 'posts', 'post']).items.map(normalizePost)
+  const first = normalizeList(await apiGet('/api/post', { query: { page: 1, size: 200, ...query }, signal }), ['items', 'posts', 'post'])
+  const items = [...first.items]
+  for (let page = 2; page <= first.pagination.total_pages; page += 1) {
+    const next = normalizeList(await apiGet('/api/post', { query: { page, size: 200, ...query }, signal }), ['items', 'posts', 'post'])
+    items.push(...next.items)
+  }
+  return items.map(normalizePost)
 }
 
 export async function getPost(slug, signal) {

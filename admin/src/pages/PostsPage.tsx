@@ -14,7 +14,7 @@ import { useListParams } from "../hooks/useListParams";
 import { apiClient } from "../lib/api";
 import { formatDate } from "../lib/format";
 import { messageFromError, normalizePage } from "../lib/normalize";
-import type { EntityId, Post } from "../types/content";
+import type { Category, EntityId, Post, Tag } from "../types/content";
 import { endpoints } from "../types/content";
 import { StatusBadge, displayName } from "./common/status";
 
@@ -44,6 +44,30 @@ export function PostsPage() {
         { page: query.page, size: query.size },
       ),
     placeholderData: (value) => value,
+  });
+  const categories = useQuery({
+    queryKey: ["categories", "post-filter"],
+    queryFn: async ({ signal }) =>
+      normalizePage<Category>(
+        await apiClient.get<unknown>(endpoints.categories, {
+          query: { page: 1, size: 200 },
+          signal,
+        }),
+        ["items", "categories"],
+        { page: 1, size: 200 },
+      ).items,
+  });
+  const tags = useQuery({
+    queryKey: ["tags", "post-filter"],
+    queryFn: async ({ signal }) =>
+      normalizePage<Tag>(
+        await apiClient.get<unknown>(endpoints.tags, {
+          query: { page: 1, size: 500 },
+          signal,
+        }),
+        ["items", "tags"],
+        { page: 1, size: 500 },
+      ).items,
   });
   const refresh = () => queryClient.invalidateQueries({ queryKey: ["posts"] });
   const operation = useMutation({
@@ -237,6 +261,36 @@ export function PostsPage() {
           <option value="scheduled">定时发布</option>
           <option value="offline">已下架</option>
         </select>
+        <select
+          value={String(query.category ?? "")}
+          onChange={(event) => update({ category: event.target.value }, true)}
+        >
+          <option value="">全部分类</option>
+          {categories.data?.map((item) => (
+            <option value={item.id} key={item.id}>{item.name}</option>
+          ))}
+        </select>
+        <select
+          value={String(query.tag ?? "")}
+          onChange={(event) => update({ tag: event.target.value }, true)}
+        >
+          <option value="">全部标签</option>
+          {tags.data?.map((item) => (
+            <option value={item.id} key={item.id}>{item.name}</option>
+          ))}
+        </select>
+        <input
+          type="date"
+          aria-label="开始发布时间"
+          value={String(query.date_from ?? "")}
+          onChange={(event) => update({ date_from: event.target.value }, true)}
+        />
+        <input
+          type="date"
+          aria-label="结束发布时间"
+          value={String(query.date_to ?? "")}
+          onChange={(event) => update({ date_to: event.target.value }, true)}
+        />
       </FilterBar>
       <DataTable
         columns={columns}

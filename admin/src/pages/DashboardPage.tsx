@@ -72,7 +72,7 @@ export function DashboardPage() {
         <LoadingState label="正在汇总站点数据…" />
       ) : query.isError ? (
         <ErrorState
-          title="控制台接口尚不可用"
+          title="控制台暂时无法加载"
           description={`${messageFromError(query.error)} 需要实现 GET ${endpoints.dashboard}。`}
           onRetry={() => void query.refetch()}
         />

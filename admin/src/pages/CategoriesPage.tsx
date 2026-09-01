@@ -1,7 +1,6 @@
 import type { DataTableColumn } from "../components/DataTable";
 import type { Category } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 import {
   ResourceManager,
   type ManagedResource,
@@ -45,7 +44,7 @@ export function CategoriesPage() {
           name: "parent_id",
           label: "上级分类",
           placeholder: "留空表示顶级分类",
-          hint: "当前 API 文档尚未定义分类树接口。",
+          hint: "留空创建顶级分类；已有分类 ID 可作为上级。",
         },
         { name: "sort", label: "排序", type: "number" },
         { name: "activate", label: "状态", type: "checkbox", full: true },
@@ -74,13 +73,6 @@ export function CategoriesPage() {
         ) : (
           "服务端未提供关联文章数量，请谨慎删除。"
         )
-      }
-      apiNote={
-        <ApiRequirement>
-          父子分类、拖拽排序和删除前关联迁移需要后端补充
-          parent_id、sort、post_count
-          以及关联处理规则；当前界面会展示已有字段，但不会猜测处理结果。
-        </ApiRequirement>
       }
     />
   );

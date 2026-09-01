@@ -25,7 +25,6 @@ import { formatBytes, formatDate } from "../lib/format";
 import { messageFromError, normalizePage } from "../lib/normalize";
 import type { Attachment, EntityId } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 
 export function AttachmentsPage() {
   const { query, update } = useListParams({
@@ -275,10 +274,6 @@ export function AttachmentsPage() {
           </>
         }
       />
-      <ApiRequirement>
-        安全删除依赖后端维护 attachment_references
-        关系表并在删除接口中重新校验；前端显示的关联数只用于提示，不能替代服务端约束。
-      </ApiRequirement>
       {uploads.length > 0 && (
         <section className="upload-queue">
           {uploads.map((item) => (

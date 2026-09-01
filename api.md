@@ -1,4 +1,30 @@
-# Mossline 文档
+# Mossline API
+
+> 本文件保留简要说明。完整、可导入的 OpenAPI 3.1 文档由服务暴露在 `/openapi.yaml`，浏览入口为 `/docs`。
+
+所有 JSON 接口使用统一响应：`{ "code": 200, "data": {}, "msg": "" }`。错误会额外提供稳定的 `error_code`，参数错误可包含 `errors`；列表统一返回 `items` 与 `pagination`。
+
+## 接口清单
+
+- 认证：`POST /api/login`、`POST /api/logout`、`GET /api/me`
+- 文章：`/api/post`，支持 CRUD、批量状态、分页及关键词/分类/标签/状态/时间筛选
+- 分类：`/api/category`，支持 CRUD、排序和启用状态
+- 标签：`/api/tag`，支持 CRUD、状态和文章多对多关联
+- 动态：`/api/moment`，支持 CRUD、状态、可见性、发布时间和附件
+- 友链：`/api/friend`，支持 CRUD、排序和启用状态
+- 关于：`GET/PUT /api/about`，固定单例 `id=1`
+- 附件：`/api/attachment`，支持校验上传、列表、详情、重命名和安全删除
+- 用户：`/api/admin/users`，管理员专属 CRUD 和状态管理
+- 控制台：`/api/admin/dashboard`
+- 健康检查：`/healthz`
+
+匿名读取仅返回已发布或启用的内容。写操作要求 `admin` 或 `editor`，用户管理仅允许 `admin`。
+
+主要错误状态：`401` 会话无效、`403` 权限不足、`404` 资源不存在、`409` 唯一冲突或关联保护、`422` 参数校验失败、`429` 登录尝试过频、`500` 服务异常。
+
+---
+
+## 历史设计草案（仅供参考）
 
 ## 后端
 

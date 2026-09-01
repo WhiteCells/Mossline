@@ -45,9 +45,13 @@ func OptionalMiddleware(db *sql.DB) gin.HandlerFunc {
 	service := NewService(db)
 	return func(c *gin.Context) {
 		if token := BearerToken(c); token != "" {
-			if user, err := service.Authenticate(c.Request.Context(), token); err == nil {
-				c.Set(ContextUserKey, user)
+			user, err := service.Authenticate(c.Request.Context(), token)
+			if err != nil {
+				Failure(c, http.StatusUnauthorized, "UNAUTHORIZED", "登录已过期或无效，请重新登录", nil)
+				c.Abort()
+				return
 			}
+			c.Set(ContextUserKey, user)
 		}
 		c.Next()
 	}

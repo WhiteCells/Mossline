@@ -20,7 +20,6 @@ import type {
   PublishStatus,
 } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 
 export function AboutPage() {
   const [content, setContent] = useState("");
@@ -139,9 +138,6 @@ export function AboutPage() {
           </>
         }
       />
-      <ApiRequirement>
-        版本历史与草稿恢复需要后端提供版本列表、版本详情和恢复接口；当前仅接入单一草稿/发布状态，不在前端伪造版本。
-      </ApiRequirement>
       <div className="about-editor">
         <MarkdownEditor
           value={content}

@@ -21,5 +21,5 @@ export function usePosts() {
     return () => controller.abort()
   }, [load])
 
-  return { ...state, retry: load }
+  return { ...state, retry: () => load() }
 }

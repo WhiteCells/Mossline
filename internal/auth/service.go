@@ -27,11 +27,13 @@ type Service struct {
 }
 
 func NewService(db *sql.DB) *Service {
-	hours := 24
-	if value, err := strconv.Atoi(os.Getenv("AUTH_SESSION_HOURS")); err == nil && value > 0 && value <= 24*90 {
-		hours = value
+	ttl := 24 * time.Hour
+	if value, err := time.ParseDuration(os.Getenv("AUTH_SESSION_TTL")); err == nil && value > 0 && value <= 90*24*time.Hour {
+		ttl = value
+	} else if hours, err := strconv.Atoi(os.Getenv("AUTH_SESSION_HOURS")); err == nil && hours > 0 && hours <= 24*90 {
+		ttl = time.Duration(hours) * time.Hour
 	}
-	return &Service{db: db, sessionTTL: time.Duration(hours) * time.Hour}
+	return &Service{db: db, sessionTTL: ttl}
 }
 
 func tokenHash(token string) string {
@@ -85,7 +87,11 @@ func (s *Service) Login(ctx context.Context, identifier, password string) (Login
 		return LoginResponse{}, ErrInvalidCredentials
 	}
 
-	token, err := randomToken(32)
+	tokenBytes := 32
+	if value, parseErr := strconv.Atoi(os.Getenv("AUTH_TOKEN_BYTES")); parseErr == nil && value >= 32 && value <= 128 {
+		tokenBytes = value
+	}
+	token, err := randomToken(tokenBytes)
 	if err != nil {
 		return LoginResponse{}, err
 	}

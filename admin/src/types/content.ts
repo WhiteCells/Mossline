@@ -160,7 +160,7 @@ export interface ListQuery {
 
 export const endpoints = {
   dashboard: "/api/dashboard",
-  users: "/api/users",
+  users: "/api/admin/users",
   posts: "/api/post",
   categories: "/api/category",
   tags: "/api/tag",

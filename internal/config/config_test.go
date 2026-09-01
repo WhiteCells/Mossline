@@ -38,10 +38,10 @@ func TestLoadRejectsInvalidValues(t *testing.T) {
 func TestValidateRejectsWildcardCredentialedCORS(t *testing.T) {
 	cfg := Config{
 		Environment: Development,
-		Database: Database{Host: "localhost", Name: "mossline", User: "mossline", MaxOpenConns: 1},
-		Auth: Auth{SessionTTL: 1, TokenBytes: 32},
-		Storage: Storage{Driver: "local", LocalDirectory: "uploads", PublicURLPrefix: "/uploads", MaxUploadBytes: 1, AllowedMIMETypes: []string{"image/png"}},
-		CORS: CORS{AllowedOrigins: []string{"*"}, AllowCredentials: true},
+		Database:    Database{Host: "localhost", Name: "mossline", User: "mossline", MaxOpenConns: 1},
+		Auth:        Auth{SessionTTL: 1, TokenBytes: 32},
+		Storage:     Storage{Driver: "local", LocalDirectory: "uploads", PublicURLPrefix: "/uploads", MaxUploadBytes: 1, AllowedMIMETypes: []string{"image/png"}},
+		CORS:        CORS{AllowedOrigins: []string{"*"}, AllowCredentials: true},
 	}
 
 	if err := cfg.Validate(); err == nil || !strings.Contains(err.Error(), "cannot contain *") {

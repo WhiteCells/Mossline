@@ -18,7 +18,7 @@ import { TagsPage } from './pages/TagsPage'
 
 function App() {
   const { theme, toggleTheme } = useTheme()
-  const { posts, status, retry } = usePosts()
+  const { posts, status, error, retry } = usePosts()
   const location = useLocation()
   const navigate = useNavigate()
   const [searchOpen, setSearchOpen] = useState(false)
@@ -46,11 +46,11 @@ function App() {
       <Header theme={theme} onThemeToggle={toggleTheme} onSearch={() => setSearchOpen(true)} onLogin={showToast} />
       <main>
         <Routes>
-          <Route path="/" element={<HomePage posts={posts} status={status} />} />
+          <Route path="/" element={<HomePage posts={posts} status={status} retry={retry} />} />
           <Route path="/articles" element={<ArticlesPage posts={posts} status={status} retry={retry} searchQuery={searchQuery} onClearSearch={() => navigate('/articles')} />} />
           <Route path="/articles/:slug" element={<ArticleDetailPage />} />
-          <Route path="/categories" element={<CategoriesPage posts={posts} />} />
-          <Route path="/tags" element={<TagsPage posts={posts} />} />
+          <Route path="/categories" element={<CategoriesPage posts={posts} status={status} error={error} retry={retry} />} />
+          <Route path="/tags" element={<TagsPage posts={posts} status={status} error={error} retry={retry} />} />
           <Route path="/moments" element={<MomentsPage />} />
           <Route path="/friends" element={<FriendsPage />} />
           <Route path="/about" element={<AboutPage />} />

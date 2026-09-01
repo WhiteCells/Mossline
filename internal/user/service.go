@@ -12,6 +12,7 @@ import (
 )
 
 var ErrNotFound = errors.New("user not found")
+var ErrProtected = errors.New("protected user")
 
 type Service struct{ db *sql.DB }
 
@@ -187,4 +188,10 @@ func (s *Service) Delete(ctx context.Context, ids []uint64) error {
 		return err
 	}
 	return tx.Commit()
+}
+
+func (s *Service) CountActiveAdmins(ctx context.Context) (int, error) {
+	var count int
+	err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM users WHERE role='admin' AND status='active' AND deleted_at IS NULL").Scan(&count)
+	return count, err
 }

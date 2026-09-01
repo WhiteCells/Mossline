@@ -20,6 +20,13 @@ export function useListParams(defaults: Partial<ListQuery> = {}) {
       ),
       search: params.get("search") || defaults.search || undefined,
       status: params.get("status") || defaults.status || undefined,
+      category: params.get("category") || defaults.category || undefined,
+      tag: params.get("tag") || defaults.tag || undefined,
+      date_from: params.get("date_from") || defaults.date_from || undefined,
+      date_to: params.get("date_to") || defaults.date_to || undefined,
+      role: params.get("role") || defaults.role || undefined,
+      type: params.get("type") || defaults.type || undefined,
+      referenced: params.get("referenced") || defaults.referenced || undefined,
       sort: params.get("sort") || defaults.sort || undefined,
       order:
         (params.get("order") as "asc" | "desc" | null) ||
@@ -33,6 +40,13 @@ export function useListParams(defaults: Partial<ListQuery> = {}) {
       defaults.size,
       defaults.sort,
       defaults.status,
+      defaults.category,
+      defaults.tag,
+      defaults.date_from,
+      defaults.date_to,
+      defaults.role,
+      defaults.type,
+      defaults.referenced,
       params,
     ],
   );

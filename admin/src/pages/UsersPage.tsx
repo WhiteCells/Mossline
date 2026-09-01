@@ -20,7 +20,6 @@ import {
 } from "../lib/normalize";
 import type { EntityId, UserSummary } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 import { StatusBadge } from "./common/status";
 
 interface UserForm {
@@ -266,11 +265,6 @@ export function UsersPage() {
           </Button>
         }
       />
-      <ApiRequirement>
-        当前后端 User 仅有 ID、Name，尚缺
-        username、password_hash、avatar、email、role、status 与用户
-        CRUD/权限接口；这些字段必须由后端落地后才能真正保存。
-      </ApiRequirement>
       <FilterBar
         search={search}
         onSearchChange={setSearch}

@@ -27,7 +27,6 @@ import type {
   Tag,
 } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 
 interface PostForm {
   title: string;
@@ -259,11 +258,6 @@ export function PostEditorPage() {
           </>
         }
       />
-      <ApiRequirement>
-        附件上传默认调用 POST /api/admin/attachments，并携带
-        relation_type、relation_id 或 relation_key；后端需在文章首次保存时将
-        relation_key 原子绑定到新文章。
-      </ApiRequirement>
       <div className="editor-layout">
         <div className="editor-main form-stack">
           <section className="form-section">

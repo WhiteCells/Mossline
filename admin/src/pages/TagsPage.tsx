@@ -1,7 +1,6 @@
 import type { DataTableColumn } from "../components/DataTable";
 import type { Tag } from "../types/content";
 import { endpoints } from "../types/content";
-import { ApiRequirement } from "./common/ApiRequirement";
 import {
   ResourceManager,
   type ManagedResource,
@@ -46,12 +45,6 @@ export function TagsPage() {
         ) : (
           "服务端未提供标签关联数。"
         )
-      }
-      apiNote={
-        <ApiRequirement>
-          批量删除和删除影响确认依赖后端返回 post_count，并在 DELETE
-          时执行事务化解除关联；接口文档目前未定义这部分契约。
-        </ApiRequirement>
       }
     />
   );

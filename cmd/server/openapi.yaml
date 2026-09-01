@@ -1,0 +1,108 @@
+openapi: 3.1.0
+info:
+  title: Mossline Content Management API
+  version: 1.0.0
+  description: Public content and authenticated administration REST API.
+servers:
+  - url: http://localhost:8081
+security: []
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  schemas:
+    Envelope:
+      type: object
+      required: [code, data, msg]
+      properties:
+        code: { type: integer, example: 200 }
+        data: {}
+        msg: { type: string }
+        error_code: { type: string }
+        errors: { type: object, additionalProperties: { type: array, items: { type: string } } }
+    Login:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string, format: password }
+  responses:
+    Unauthorized: { description: Missing or expired bearer token }
+    Forbidden: { description: Role cannot perform this operation }
+    Validation: { description: Invalid request fields }
+paths:
+  /healthz:
+    get: { summary: Service and database health, responses: { '200': { description: Healthy }, '503': { description: Database unavailable } } }
+  /api/login:
+    post:
+      summary: Sign in
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/Login' } } } }
+      responses: { '200': { description: Bearer token and user }, '401': { $ref: '#/components/responses/Unauthorized' }, '422': { $ref: '#/components/responses/Validation' } }
+  /api/logout:
+    post: { summary: Revoke current token, security: [ { bearerAuth: [] } ], responses: { '200': { description: Signed out } } }
+  /api/me:
+    get: { summary: Current user, security: [ { bearerAuth: [] } ], responses: { '200': { description: Current user }, '401': { $ref: '#/components/responses/Unauthorized' } } }
+  /api/post:
+    get:
+      summary: Paginated posts; anonymous users only see published content
+      parameters:
+        - { in: query, name: page, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: size, schema: { type: integer, minimum: 1, maximum: 200 } }
+        - { in: query, name: search, schema: { type: string } }
+        - { in: query, name: category, schema: { type: string } }
+        - { in: query, name: tag, schema: { type: string } }
+        - { in: query, name: status, schema: { type: string, enum: [draft, published, scheduled, offline] } }
+        - { in: query, name: date_from, schema: { type: string, format: date } }
+        - { in: query, name: date_to, schema: { type: string, format: date } }
+      responses: { '200': { description: Paginated posts } }
+    post: { summary: Create post, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created }, '401': { $ref: '#/components/responses/Unauthorized' }, '403': { $ref: '#/components/responses/Forbidden' }, '422': { $ref: '#/components/responses/Validation' } } }
+    delete: { summary: Batch soft-delete posts, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted } } }
+  /api/post/{idOrSlug}:
+    parameters: [ { in: path, name: idOrSlug, required: true, schema: { type: string } } ]
+    get: { summary: Post detail, responses: { '200': { description: Post }, '404': { description: Not found } } }
+    put: { summary: Update by numeric ID, security: [ { bearerAuth: [] } ], responses: { '200': { description: Updated } } }
+    patch: { summary: Partially update by numeric ID, security: [ { bearerAuth: [] } ], responses: { '200': { description: Updated } } }
+    delete: { summary: Soft-delete by numeric ID, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted } } }
+  /api/category:
+    get: { summary: List categories, responses: { '200': { description: Paginated categories } } }
+    post: { summary: Create category, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created } } }
+    delete: { summary: Batch delete unreferenced categories, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted }, '409': { description: Referenced } } }
+  /api/tag:
+    get: { summary: List tags, responses: { '200': { description: Paginated tags } } }
+    post: { summary: Create tag, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created } } }
+    delete: { summary: Batch delete tags and detach posts, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted } } }
+  /api/moment:
+    get: { summary: List moments, responses: { '200': { description: Paginated moments } } }
+    post: { summary: Create moment, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created } } }
+    delete: { summary: Batch soft-delete moments, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted } } }
+  /api/friend:
+    get: { summary: List active friend links, responses: { '200': { description: Paginated friend links } } }
+    post: { summary: Create friend link, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created } } }
+    delete: { summary: Batch soft-delete friend links, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted } } }
+  /api/about:
+    get: { summary: Get singleton about content, responses: { '200': { description: About page }, '404': { description: No published page } } }
+    put: { summary: Update singleton about content, security: [ { bearerAuth: [] } ], responses: { '200': { description: Updated } } }
+  /api/attachment:
+    get: { summary: List attachments, security: [ { bearerAuth: [] } ], responses: { '200': { description: Paginated attachments } } }
+    post:
+      summary: Upload validated multipart file
+      security: [ { bearerAuth: [] } ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary }
+                relation_type: { type: string }
+                relation_id: { type: string }
+                relation_key: { type: string }
+      responses: { '201': { description: Uploaded }, '400': { description: Invalid type or size } }
+    delete: { summary: Batch delete unreferenced attachments, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted }, '409': { description: Referenced } } }
+  /api/admin/users:
+    get: { summary: List users, security: [ { bearerAuth: [] } ], responses: { '200': { description: Paginated users }, '403': { $ref: '#/components/responses/Forbidden' } } }
+    post: { summary: Create user, security: [ { bearerAuth: [] } ], responses: { '201': { description: Created }, '422': { $ref: '#/components/responses/Validation' } } }
+    delete: { summary: Batch soft-delete users, security: [ { bearerAuth: [] } ], responses: { '200': { description: Deleted }, '409': { description: Protected account } } }
+  /api/admin/dashboard:
+    get: { summary: Administration statistics, security: [ { bearerAuth: [] } ], responses: { '200': { description: Dashboard data } } }
