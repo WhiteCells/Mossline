@@ -34,7 +34,7 @@ export function StatusBadge({ status }: { status: string }) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function displayName(
-  value: string | { name?: string; nickname?: string } | undefined,
+  value: string | { name?: string; nickname?: string } | null | undefined,
 ): string {
   if (!value) return "—";
   if (typeof value === "string") return value;

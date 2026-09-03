@@ -1204,6 +1204,8 @@ input:focus-visible {
 .markdown-content table { width:100%; display:block; overflow:auto; border-collapse:collapse; }
 .markdown-content th,.markdown-content td { padding:9px 12px; border:1px solid var(--line); }
 .markdown-content a { color:var(--accent-deep); text-decoration:underline; text-underline-offset:3px; }
+.markdown-content .katex { overflow-wrap:normal; }
+.markdown-content .katex-display { overflow-x:auto; overflow-y:hidden; padding:6px 0; }
 .about-live { min-height:360px; padding-block:80px; }
 .moment-images { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:18px; }
 .moment-images img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; }

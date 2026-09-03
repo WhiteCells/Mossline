@@ -45,8 +45,8 @@ export interface Post {
   status: PublishStatus;
   is_top: boolean;
   author?: UserSummary | string;
-  category?: Category | string;
-  tags: Array<Tag | string>;
+  category?: Category | string | null;
+  tags?: Array<Tag | string | null> | null;
   content?: string;
   content_type?: "markdown";
   seo_title?: string;

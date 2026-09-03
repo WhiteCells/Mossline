@@ -86,6 +86,21 @@ func parseDate(value *string) (*time.Time, error) {
 	return nil, ErrInvalid
 }
 
+func normalizePostPublishedAt(status string, publishedAt *time.Time, now time.Time) (*time.Time, error) {
+	now = now.UTC()
+	switch status {
+	case "published":
+		if publishedAt == nil || publishedAt.After(now) {
+			return &now, nil
+		}
+	case "scheduled":
+		if publishedAt == nil || !publishedAt.After(now) {
+			return nil, ErrInvalid
+		}
+	}
+	return publishedAt, nil
+}
+
 func validSlug(value string) bool {
 	value = strings.TrimSpace(value)
 	if value == "" || len(value) > 255 || strings.HasPrefix(value, "-") || strings.HasSuffix(value, "-") {

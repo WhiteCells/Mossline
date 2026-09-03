@@ -262,11 +262,9 @@ func (s *Service) SavePost(ctx context.Context, id, authorID uint64, input PostI
 		return Post{}, err
 	}
 	now := time.Now().UTC()
-	if status == "published" && published == nil {
-		published = &now
-	}
-	if status == "scheduled" && (published == nil || !published.After(now)) {
-		return Post{}, ErrInvalid
+	published, err = normalizePostPublishedAt(status, published, now)
+	if err != nil {
+		return Post{}, err
 	}
 	categoryID, err := nullableUint(input.CategoryID)
 	if err != nil {
@@ -357,7 +355,7 @@ func (s *Service) SetPostStatus(ctx context.Context, ids []uint64, status string
 	set := "status=?,updated_at=?"
 	args := []any{status, time.Now().UTC()}
 	if status == "published" {
-		set += ",published_at=COALESCE(published_at,UTC_TIMESTAMP(6))"
+		set += ",published_at=CASE WHEN published_at IS NULL OR published_at>UTC_TIMESTAMP(6) THEN UTC_TIMESTAMP(6) ELSE published_at END"
 	}
 	for _, id := range ids {
 		args = append(args, id)

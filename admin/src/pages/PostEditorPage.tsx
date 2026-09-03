@@ -14,11 +14,16 @@ import { ErrorState, LoadingState } from "../components/States";
 import { useToast } from "../components/Toast";
 import { apiClient } from "../lib/api";
 import {
+  apiDateTimeToLocalInput,
+  localInputToApiDateTime,
+} from "../lib/dateTime";
+import {
   getFieldErrors,
   messageFromError,
   normalizePage,
 } from "../lib/normalize";
 import { slugify } from "../lib/format";
+import { publicArticleUrl } from "../lib/publicSite";
 import type {
   Attachment,
   Category,
@@ -56,6 +61,28 @@ const initial: PostForm = {
   seo_title: "",
   seo_description: "",
 };
+
+function postToForm(post: Post): PostForm {
+  return {
+    title: post.title,
+    slug: post.slug,
+    desc: post.desc ?? "",
+    cover: post.cover ?? "",
+    category_id:
+      post.category && typeof post.category === "object"
+        ? String(post.category.id)
+        : "",
+    tag_ids: (post.tags ?? []).flatMap((tag) =>
+      tag && typeof tag === "object" ? [String(tag.id)] : [],
+    ),
+    content: post.content ?? "",
+    status: post.status,
+    is_top: post.is_top,
+    published_at: apiDateTimeToLocalInput(post.published_at),
+    seo_title: post.seo_title ?? "",
+    seo_description: post.seo_description ?? "",
+  };
+}
 
 export function PostEditorPage() {
   const { id } = useParams();
@@ -114,25 +141,7 @@ export function PostEditorPage() {
 
   useEffect(() => {
     if (!post.data) return;
-    const next: PostForm = {
-      title: post.data.title,
-      slug: post.data.slug,
-      desc: post.data.desc ?? "",
-      cover: post.data.cover ?? "",
-      category_id:
-        typeof post.data.category === "object"
-          ? String(post.data.category.id)
-          : "",
-      tag_ids: post.data.tags.flatMap((tag) =>
-        typeof tag === "object" ? [String(tag.id)] : [],
-      ),
-      content: post.data.content ?? "",
-      status: post.data.status,
-      is_top: post.data.is_top,
-      published_at: post.data.published_at?.slice(0, 16) ?? "",
-      seo_title: post.data.seo_title ?? "",
-      seo_description: post.data.seo_description ?? "",
-    };
+    const next = postToForm(post.data);
     setForm(next);
     setSavedContent(next.content);
   }, [post.data]);
@@ -142,7 +151,7 @@ export function PostEditorPage() {
       const payload = {
         ...form,
         status: status ?? form.status,
-        published_at: form.published_at || null,
+        published_at: localInputToApiDateTime(form.published_at),
         content_type: "markdown",
         attachment_relation_key: relationKey,
       };
@@ -154,7 +163,11 @@ export function PostEditorPage() {
         : apiClient.post<Post, typeof payload>(endpoints.posts, payload);
     },
     onSuccess: async (data) => {
-      setSavedContent(form.content);
+      const next = postToForm(data);
+      setForm(next);
+      setSavedContent(next.content);
+      setErrors({});
+      queryClient.setQueryData<Post>(["post", String(data.id)], data);
       await queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast({
         tone: "success",
@@ -172,24 +185,29 @@ export function PostEditorPage() {
     },
   });
 
-  function validate() {
+  function validate(targetStatus: PublishStatus = form.status) {
     const next: Record<string, string> = {};
     if (!form.title.trim()) next.title = "请输入文章标题";
     if (!form.slug.trim()) next.slug = "请输入 Slug";
     else if (!/^[a-z0-9\u4e00-\u9fa5-]+$/.test(form.slug))
       next.slug = "Slug 只能包含字母、数字、中文和连字符";
     if (!form.content.trim()) next.content = "请输入正文";
-    if (form.status === "scheduled" && !form.published_at)
+    if (targetStatus === "scheduled" && !form.published_at)
       next.published_at = "定时发布需要选择时间";
     setErrors(next);
     return !Object.keys(next).length;
   }
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (validate()) save.mutate(undefined);
+    if (!validate(form.status)) return;
+    if (form.status === "published") {
+      setPublishConfirm(true);
+      return;
+    }
+    save.mutate(undefined);
   }
   function publish() {
-    if (validate()) setPublishConfirm(true);
+    if (validate("published")) setPublishConfirm(true);
   }
   const library: AttachmentLibraryItem[] = (attachments.data ?? []).map(
     (item) => ({
@@ -229,17 +247,26 @@ export function PostEditorPage() {
               <ArrowLeft />
               返回列表
             </Link>
-            {editing && (
+            {editing && form.status === "published" ? (
               <a
                 className="ui-link-button ui-link-button--outline"
-                href={`/articles?q=${encodeURIComponent(form.title)}`}
+                href={publicArticleUrl(form.slug)}
                 target="_blank"
                 rel="noreferrer"
               >
                 <Eye />
-                前台预览
+                前台查看
               </a>
-            )}
+            ) : editing ? (
+              <Button
+                variant="outline"
+                disabled
+                leftIcon={<Eye />}
+                title="仅已发布文章可在前台查看"
+              >
+                前台不可见
+              </Button>
+            ) : null}
             <Button
               variant="outline"
               type="submit"

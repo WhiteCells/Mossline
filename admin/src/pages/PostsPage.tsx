@@ -14,6 +14,7 @@ import { useListParams } from "../hooks/useListParams";
 import { apiClient } from "../lib/api";
 import { formatDate } from "../lib/format";
 import { messageFromError, normalizePage } from "../lib/normalize";
+import { publicArticleUrl } from "../lib/publicSite";
 import type { Category, EntityId, Post, Tag } from "../types/content";
 import { endpoints } from "../types/content";
 import { StatusBadge, displayName } from "./common/status";
@@ -165,15 +166,25 @@ export function PostsPage() {
         align: "right",
         cell: (post) => (
           <div className="table-actions">
-            <a
-              className="icon-link"
-              href={`/articles?q=${encodeURIComponent(post.title)}`}
-              target="_blank"
-              rel="noreferrer"
-              title="查看"
-            >
-              <Eye />
-            </a>
+            {post.status === "published" ? (
+              <a
+                className="icon-link"
+                href={publicArticleUrl(post.slug)}
+                target="_blank"
+                rel="noreferrer"
+                title="前台查看"
+              >
+                <Eye />
+              </a>
+            ) : (
+              <span
+                className="icon-link icon-link--disabled"
+                aria-disabled="true"
+                title="仅已发布文章可在前台查看"
+              >
+                <Eye />
+              </span>
+            )}
             <Button
               size="icon"
               variant="ghost"

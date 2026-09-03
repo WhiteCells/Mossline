@@ -17,6 +17,10 @@ npm run lint
 npm run build
 ```
 
+管理端的文章“前台查看”在本地开发时默认打开
+`http://localhost:5173`。如果 Web 端使用其他地址，可设置
+`VITE_PUBLIC_SITE_URL`；生产环境未设置时默认使用当前站点同源地址。
+
 产物位于 `admin/dist`，Vite base 为 `/admin/`。生产服务器需要配置：
 
 - `/admin/assets/*` 读取 `admin/dist/assets/*`；

@@ -1,16 +1,7 @@
-import { apiGet, normalizeList } from './api'
+import { apiGet, normalizeList } from './api.js'
+import { normalizePost } from './normalizePost.js'
 
-function normalizePost(post) {
-  return {
-    ...post,
-    desc: post.desc ?? post.description ?? '',
-    category: typeof post.category === 'object' ? post.category.name : post.category || '未分类',
-    tags: (post.tags || []).map((tag) => typeof tag === 'object' ? tag.name : tag),
-    reading_time: post.reading_time || Math.max(1, Math.ceil((post.word || post.content?.length || 0) / 500)),
-    comments_count: post.comments_count || 0,
-    cover: post.cover || 'code',
-  }
-}
+export { normalizePost } from './normalizePost.js'
 
 export async function getPosts({ signal, query } = {}) {
   const first = normalizeList(await apiGet('/api/post', { query: { page: 1, size: 200, ...query }, signal }), ['items', 'posts', 'post'])

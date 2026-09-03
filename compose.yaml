@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-mossline-local-123}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-local-123}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mossline_mysql:/var/lib/mysql
     healthcheck:

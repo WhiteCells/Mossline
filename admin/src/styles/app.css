@@ -332,6 +332,13 @@ svg {
 .icon-link:hover {
   background: var(--bg-soft);
 }
+.icon-link--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.icon-link--disabled:hover {
+  background: transparent;
+}
 .danger-action {
   color: var(--danger) !important;
 }
