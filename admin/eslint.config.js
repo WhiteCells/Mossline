@@ -18,6 +18,8 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
     },
     rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'error',
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },

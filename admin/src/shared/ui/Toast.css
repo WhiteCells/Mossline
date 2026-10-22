@@ -1,0 +1,68 @@
+.ui-toast-region {
+  position: fixed;
+  z-index: 1200;
+  top: 18px;
+  right: 18px;
+  width: min(390px, calc(100vw - 36px));
+  display: grid;
+  gap: 10px;
+  pointer-events: none;
+}
+.ui-toast {
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 14px 12px 14px 15px;
+  background: var(--admin-surface-raised);
+  border: 1px solid var(--admin-border);
+  border-left: 4px solid var(--admin-info);
+  border-radius: var(--admin-radius-md);
+  box-shadow: var(--admin-shadow-md);
+  animation: ui-toast-in 0.22s ease;
+}
+.ui-toast--success {
+  border-left-color: var(--admin-primary);
+}
+.ui-toast--error {
+  border-left-color: var(--admin-danger);
+}
+.ui-toast--warning {
+  border-left-color: var(--admin-warning);
+}
+.ui-toast__icon {
+  display: flex;
+  margin-top: 1px;
+  color: var(--admin-info);
+}
+.ui-toast--success .ui-toast__icon {
+  color: var(--admin-primary);
+}
+.ui-toast--error .ui-toast__icon {
+  color: var(--admin-danger);
+}
+.ui-toast--warning .ui-toast__icon {
+  color: var(--admin-warning);
+}
+.ui-toast__copy strong {
+  display: block;
+  font-size: 14px;
+}
+.ui-toast__copy p {
+  margin: 4px 0 0;
+  color: var(--admin-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ui-toast .ui-button {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+}
+@keyframes ui-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}

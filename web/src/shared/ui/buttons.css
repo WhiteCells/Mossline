@@ -1,0 +1,58 @@
+.icon-button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.icon-button:hover {
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.hero-button,
+.primary-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0 24px;
+  color: #fff;
+  background: rgba(67, 57, 62, 0.84);
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(59, 46, 52, 0.15);
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hero-button:hover,
+.primary-button:hover {
+  background: var(--accent-deep);
+  box-shadow: 0 12px 30px rgba(197, 97, 126, 0.24);
+  transform: translateY(-3px);
+}
+
+.hero-button svg,
+.primary-button svg {
+  transition: transform 0.2s ease;
+}
+
+.hero-button:hover svg,
+.primary-button:hover svg {
+  transform: translateX(4px);
+}

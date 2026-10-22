@@ -1,0 +1,176 @@
+.moments-timeline {
+  position: relative;
+  max-width: 930px;
+}
+
+.moments-timeline::before {
+  content: '';
+  position: absolute;
+  top: 85px;
+  bottom: 130px;
+  left: 123px;
+  width: 1px;
+  background: linear-gradient(var(--accent), var(--sage), transparent);
+}
+
+.timeline-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 95px 30px 1fr;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 34px;
+}
+
+.timeline-date {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-height: 60px;
+  color: var(--muted);
+}
+
+.timeline-date strong {
+  color: var(--heading);
+  font:
+    italic 28px/1 Georgia,
+    serif;
+}
+
+.timeline-date span {
+  padding-left: 7px;
+  border-left: 1px solid var(--line);
+  font-size: 7px;
+  line-height: 1.55;
+  letter-spacing: 0.1em;
+}
+
+.timeline-dot {
+  position: relative;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  margin: 25px auto 0;
+  background: var(--surface);
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+.timeline-card {
+  position: relative;
+  min-height: 190px;
+  padding: 35px 42px 31px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  transition: 0.25s ease;
+}
+
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  right: -35px;
+  bottom: -52px;
+  width: 155px;
+  height: 115px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+}
+
+.timeline-card.sage::after {
+  background: var(--sage-soft);
+}
+.timeline-card.blue::after {
+  background: rgba(140, 174, 186, 0.14);
+}
+.timeline-card.amber::after {
+  background: rgba(209, 170, 111, 0.14);
+}
+.timeline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.moment-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-deep);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.timeline-card blockquote {
+  margin: 15px 0 10px;
+  color: var(--heading);
+  font: 500 clamp(1.15rem, 2vw, 1.45rem) / 1.9 var(--serif);
+  letter-spacing: 0.05em;
+}
+.timeline-card > p {
+  margin: 0;
+  color: var(--muted);
+  font: 11px/1.8 var(--serif);
+}
+.timeline-card > button {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+  padding: 7px 10px;
+  color: var(--muted);
+  background: var(--bg-soft);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 9px;
+  transition: 0.2s ease;
+}
+.timeline-card > button:hover,
+.timeline-card > button.is-liked {
+  color: #fff;
+  background: var(--accent);
+}
+.timeline-card > button.is-liked svg {
+  fill: currentColor;
+}
+.moment-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 18px;
+}
+.moment-images img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media (max-width: 760px) {
+  .moments-timeline::before {
+    left: 19px;
+    top: 65px;
+  }
+  .timeline-entry {
+    grid-template-columns: 38px 1fr;
+    gap: 13px;
+  }
+  .timeline-date {
+    grid-column: 2;
+    justify-content: flex-start;
+    min-height: 40px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: 14px;
+    top: 44px;
+    margin: 0;
+  }
+  .timeline-card {
+    grid-column: 2;
+    padding: 28px 24px;
+  }
+}

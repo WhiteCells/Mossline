@@ -1,0 +1,216 @@
+.site-header {
+  position: fixed;
+  z-index: 50;
+  inset: 0 0 auto;
+  height: var(--header-height);
+  color: var(--text);
+  border-bottom: 1px solid transparent;
+  transition:
+    height 0.35s ease,
+    color 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.site-header.is-scrolled {
+  height: 68px;
+  color: var(--text);
+  background: var(--surface-glass);
+  border-color: var(--line);
+  box-shadow: 0 5px 24px rgba(64, 44, 53, 0.06);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+.header-inner {
+  position: relative;
+  width: min(1380px, calc(100% - 56px));
+  height: 100%;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+.desktop-nav {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: clamp(17px, 1.9vw, 30px);
+  margin-left: 0;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.desktop-nav .nav-link {
+  position: relative;
+  padding: 11px 0;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+.desktop-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  inset: auto 50% 3px;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition:
+    width 0.25s ease,
+    left 0.25s ease;
+}
+
+.desktop-nav .nav-link:hover::after,
+.desktop-nav .nav-link.is-active::after {
+  left: 0;
+  width: 100%;
+}
+
+.desktop-nav .nav-link.is-active {
+  color: var(--accent-deep);
+}
+
+.header-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+}
+
+.login-button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding: 0 17px;
+  color: var(--surface);
+  background: var(--heading);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.login-button:hover {
+  background: var(--accent-deep) !important;
+  transform: translateY(-2px);
+}
+
+.menu-button {
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 1120px) {
+  .header-inner {
+    width: calc(100% - 34px);
+    gap: 25px;
+  }
+  .desktop-nav {
+    gap: 16px;
+  }
+  .desktop-nav .nav-link {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 960px) {
+  .desktop-nav,
+  .login-button {
+    display: none;
+  }
+  .header-actions {
+    margin-left: auto;
+  }
+  .menu-button {
+    display: grid;
+  }
+  .mobile-menu {
+    position: fixed;
+    display: block;
+    inset: 68px 0 0;
+    padding: 30px max(25px, 8vw);
+    color: var(--text);
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-15px);
+    transition: 0.3s ease;
+  }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .mobile-menu nav {
+    max-width: 500px;
+    margin: auto;
+  }
+  .mobile-menu nav a {
+    width: 100%;
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: 35px 1fr 20px;
+    align-items: center;
+    gap: 15px;
+    color: var(--text);
+    background: transparent;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+  .mobile-menu.is-open nav a {
+    animation: mobile-link-in 0.35s var(--delay) ease forwards;
+  }
+  @keyframes mobile-link-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .mobile-menu nav a > span {
+    color: var(--accent);
+    font:
+      italic 12px Georgia,
+      serif;
+  }
+  .mobile-menu nav a > svg {
+    color: var(--muted);
+  }
+  .mobile-menu nav a.is-active {
+    color: var(--accent-deep);
+  }
+  .mobile-menu > p {
+    max-width: 500px;
+    margin: 28px auto;
+    color: var(--muted);
+    font: 11px/1.8 var(--serif);
+    text-align: center;
+  }
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    width: calc(100% - 25px);
+  }
+  .header-actions .icon-button:not(.menu-button) {
+    display: none;
+  }
+}

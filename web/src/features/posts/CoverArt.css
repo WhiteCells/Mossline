@@ -1,0 +1,210 @@
+.cover-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.3s ease;
+}
+
+.post-card:hover .cover-art {
+  transform: scale(1.045);
+}
+
+.cover-art::before,
+.cover-art::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: auto -10% -25%;
+  height: 72%;
+  background: rgba(55, 83, 65, 0.7);
+  border-radius: 50% 48% 0 0;
+  transform: rotate(-5deg);
+}
+
+.cover-art::after {
+  inset: auto -25% -36% 25%;
+  height: 82%;
+  background: rgba(37, 62, 46, 0.86);
+  transform: rotate(12deg);
+}
+
+.cover-art--lake {
+  background: linear-gradient(160deg, #e9c5cb 0%, #dfe2dc 53%, #82998d 100%);
+}
+.cover-art--room {
+  background: linear-gradient(145deg, #e8d4bd, #d9a985 58%, #7d705d);
+}
+.cover-art--train {
+  background: linear-gradient(150deg, #c9d2d0, #839a98 58%, #4f6f68);
+}
+.cover-art--code {
+  background: linear-gradient(155deg, #b8c8b6, #68816c 54%, #253e31);
+}
+.cover-art--letter {
+  background: linear-gradient(155deg, #f2cfd8, #d995aa 57%, #945f71);
+}
+.cover-art--winter {
+  background: linear-gradient(145deg, #dce6eb, #a8bbc5 54%, #788a95);
+}
+
+.cover-art--room::before {
+  inset: 15% 12% -20%;
+  height: auto;
+  background: rgba(249, 236, 216, 0.55);
+  border: 7px solid rgba(92, 73, 58, 0.42);
+  border-bottom: 0;
+  border-radius: 0;
+  transform: none;
+}
+
+.cover-art--room::after {
+  background: rgba(99, 72, 52, 0.76);
+  clip-path: polygon(0 44%, 100% 29%, 100% 100%, 0 100%);
+  border-radius: 0;
+}
+.cover-art--train::before {
+  inset: 32% 7% 0;
+  height: auto;
+  border-radius: 120px 120px 0 0;
+  border: 10px solid rgba(43, 64, 64, 0.55);
+  background: linear-gradient(rgba(231, 239, 238, 0.5), rgba(65, 91, 88, 0.2));
+  transform: none;
+}
+.cover-art--train::after {
+  inset: auto 0 10%;
+  height: 7px;
+  background: rgba(41, 61, 58, 0.55);
+  border-radius: 0;
+  transform: rotate(-7deg);
+}
+.cover-art--code::before {
+  inset: 22% 12% 17%;
+  height: auto;
+  border-radius: 8px;
+  background: rgba(21, 35, 28, 0.72);
+  transform: rotate(-3deg);
+  box-shadow: 0 18px 35px rgba(14, 31, 22, 0.32);
+}
+.cover-art--code::after {
+  inset: 29% 20% 25%;
+  height: auto;
+  border-radius: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(211, 229, 213, 0.7) 0 2px,
+    transparent 2px 14px
+  );
+  transform: rotate(-3deg);
+}
+.cover-art--letter::before {
+  inset: 27% 15% 16%;
+  height: auto;
+  border-radius: 5px;
+  background: #f7eee8;
+  transform: rotate(-7deg);
+  box-shadow: 0 16px 30px rgba(81, 48, 59, 0.23);
+}
+.cover-art--letter::after {
+  inset: 43% 26% 36%;
+  height: auto;
+  background: repeating-linear-gradient(
+    to bottom,
+    #bc8998 0 1px,
+    transparent 1px 11px
+  );
+  border-radius: 0;
+  transform: rotate(-7deg);
+}
+.cover-art--winter::before {
+  background: rgba(235, 242, 245, 0.82);
+}
+.cover-art--winter::after {
+  background: rgba(96, 119, 127, 0.78);
+}
+
+.cover-orb {
+  position: absolute;
+  top: 13%;
+  right: 13%;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: rgba(255, 238, 220, 0.72);
+  box-shadow: 0 0 36px rgba(255, 242, 222, 0.45);
+}
+
+.cover-shape {
+  position: absolute;
+  display: block;
+}
+
+.shape-one {
+  left: 15%;
+  bottom: 17%;
+  width: 4px;
+  height: 39%;
+  background: rgba(49, 71, 54, 0.74);
+  transform: rotate(13deg);
+  transform-origin: bottom;
+}
+
+.shape-one::before,
+.shape-one::after {
+  content: '';
+  position: absolute;
+  left: -12px;
+  width: 28px;
+  height: 17px;
+  background: rgba(88, 113, 91, 0.9);
+  border-radius: 90% 10% 90% 10%;
+  transform: rotate(-24deg);
+}
+
+.shape-one::before {
+  top: 18%;
+}
+.shape-one::after {
+  top: 48%;
+  left: 0;
+  transform: scaleX(-1) rotate(-24deg);
+}
+
+.shape-two {
+  right: 20%;
+  bottom: 19%;
+  width: 2px;
+  height: 24%;
+  background: rgba(58, 82, 62, 0.7);
+  transform: rotate(-10deg);
+}
+
+.shape-two::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: -6px;
+  width: 14px;
+  height: 14px;
+  background: rgba(232, 167, 185, 0.9);
+  border-radius: 80% 20% 70% 30%;
+}
+
+.cover-line {
+  position: absolute;
+  inset: 10% 8%;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 2px;
+}
+
+.cover-art small {
+  position: absolute;
+  z-index: 3;
+  left: 12%;
+  bottom: 8%;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 7px;
+  letter-spacing: 0.28em;
+}

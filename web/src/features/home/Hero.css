@@ -1,0 +1,461 @@
+.hero {
+  position: relative;
+  min-height: max(690px, 100svh);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(255, 255, 255, 0.88) 0 3%,
+      rgba(255, 255, 255, 0.34) 20%,
+      transparent 44%
+    ),
+    linear-gradient(180deg, #f7e7e6 0%, #f8eeee 33%, #e8e8e1 65%, #d7dfd4 100%);
+}
+
+:root[data-theme='dark'] .hero {
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(240, 210, 221, 0.2) 0 3%,
+      rgba(118, 91, 104, 0.12) 20%,
+      transparent 44%
+    ),
+    linear-gradient(180deg, #31242d 0%, #28232a 42%, #202623 72%, #171a18 100%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  z-index: 8;
+  inset: auto 0 0;
+  height: 165px;
+  background: linear-gradient(
+    to top,
+    var(--bg) 0%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 42%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.hero-sun {
+  position: absolute;
+  z-index: -5;
+  top: 18%;
+  left: 50%;
+  width: min(33vw, 390px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(250, 240, 229, 0.7);
+  box-shadow: 0 0 80px rgba(255, 242, 224, 0.6);
+  transform: translateX(-50%);
+}
+
+.hero-cloud {
+  position: absolute;
+  z-index: -4;
+  height: 38px;
+  width: 190px;
+  opacity: 0.45;
+  filter: blur(5px);
+  background: rgba(255, 255, 255, 0.76);
+  border-radius: 999px;
+}
+
+.hero-cloud::before,
+.hero-cloud::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.hero-cloud::before {
+  left: 35px;
+  width: 75px;
+  height: 67px;
+}
+.hero-cloud::after {
+  right: 28px;
+  width: 90px;
+  height: 56px;
+}
+.cloud-one {
+  top: 27%;
+  left: 8%;
+  transform: scale(0.7);
+}
+.cloud-two {
+  top: 19%;
+  right: 6%;
+  transform: scale(0.55);
+  opacity: 0.3;
+}
+
+.mountain {
+  position: absolute;
+  z-index: -3;
+  bottom: 17%;
+  clip-path: polygon(
+    0 100%,
+    16% 61%,
+    30% 74%,
+    49% 19%,
+    60% 54%,
+    72% 34%,
+    100% 100%
+  );
+}
+
+.mountain-back {
+  left: -8%;
+  width: 78%;
+  height: 48%;
+  opacity: 0.48;
+  background: linear-gradient(150deg, #bdc7bd, #96a89b);
+}
+
+.mountain-front {
+  right: -16%;
+  width: 81%;
+  height: 46%;
+  opacity: 0.62;
+  background: linear-gradient(150deg, #aebcac, #819988);
+  clip-path: polygon(
+    0 100%,
+    10% 73%,
+    26% 45%,
+    39% 69%,
+    56% 25%,
+    67% 51%,
+    77% 36%,
+    100% 100%
+  );
+}
+
+.hero-hill {
+  position: absolute;
+  z-index: -2;
+  bottom: -17%;
+  border-radius: 50% 50% 0 0;
+}
+
+.hill-back {
+  left: -18%;
+  width: 75%;
+  height: 51%;
+  background: #6f8976;
+  transform: rotate(5deg);
+  opacity: 0.95;
+}
+
+.hill-front {
+  right: -24%;
+  width: 86%;
+  height: 49%;
+  background: #506c59;
+  transform: rotate(-7deg);
+}
+
+:root[data-theme='dark'] .mountain-back {
+  background: #48554c;
+}
+:root[data-theme='dark'] .mountain-front {
+  background: #3d5145;
+}
+:root[data-theme='dark'] .hill-back {
+  background: #304b39;
+}
+:root[data-theme='dark'] .hill-front {
+  background: #1f3a2b;
+}
+
+.hero-branch {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: -2%;
+  width: 38%;
+  height: 44%;
+  border-bottom: 11px solid rgba(78, 66, 68, 0.75);
+  border-radius: 0 0 100% 0;
+  transform: rotate(17deg);
+  transform-origin: left top;
+}
+
+.hero-branch::before,
+.hero-branch::after {
+  content: '';
+  position: absolute;
+  width: 52%;
+  height: 38%;
+  border-bottom: 5px solid rgba(78, 66, 68, 0.65);
+  border-radius: 0 0 90% 0;
+}
+
+.hero-branch::before {
+  right: 2%;
+  bottom: 1%;
+  transform: rotate(-34deg);
+}
+.hero-branch::after {
+  left: 33%;
+  bottom: -3%;
+  transform: rotate(22deg);
+}
+
+.hero-branch i,
+.hero-branch i::before,
+.hero-branch i::after {
+  position: absolute;
+  display: block;
+  width: 22px;
+  height: 14px;
+  background: #e8a4b7;
+  border-radius: 70% 20% 65% 25%;
+  box-shadow: 0 0 0 4px rgba(249, 210, 221, 0.35);
+  content: '';
+}
+
+.hero-branch i:nth-child(1) {
+  right: 5%;
+  bottom: -8%;
+}
+.hero-branch i:nth-child(2) {
+  right: 24%;
+  bottom: 6%;
+  transform: rotate(80deg);
+}
+.hero-branch i:nth-child(3) {
+  left: 39%;
+  bottom: 0;
+  transform: rotate(130deg);
+}
+.hero-branch i::before {
+  left: -16px;
+  top: -16px;
+  transform: rotate(60deg);
+}
+.hero-branch i::after {
+  right: -18px;
+  top: -12px;
+  transform: rotate(120deg);
+}
+
+.petals i {
+  --left: calc((var(--i) * 8.1 + 7) * 1%);
+  position: absolute;
+  z-index: 2;
+  top: -30px;
+  left: var(--left);
+  width: calc(7px + (var(--i) % 3) * 2px);
+  height: calc(11px + (var(--i) % 4) * 2px);
+  border-radius: 70% 20% 65% 25%;
+  background: rgba(235, 148, 174, 0.72);
+  animation: petal-fall calc(9s + (var(--i) % 5) * 1.4s) calc(var(--i) * -1.7s)
+    linear infinite;
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  45% {
+    transform: translate3d(55px, 48vh, 0) rotate(230deg);
+  }
+  100% {
+    transform: translate3d(-35px, 108vh, 0) rotate(520deg);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  margin-top: -2vh;
+  color: #40373b;
+  text-align: center;
+  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.45);
+  animation: hero-in 0.9s 0.1s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root[data-theme='dark'] .hero-content {
+  color: #f6eaf0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+}
+
+.hero-kicker span {
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.hero h1 {
+  margin: 0;
+  font:
+    italic 500 clamp(4.5rem, 10vw, 8.5rem) / 0.9 Georgia,
+    var(--serif);
+  letter-spacing: -0.04em;
+}
+
+.hero-cn {
+  margin: 22px 0 0;
+  font: 500 clamp(1.15rem, 2vw, 1.55rem) / 1.5 var(--serif);
+  letter-spacing: 0.55em;
+  text-indent: 0.55em;
+}
+
+.hero-description {
+  margin: 13px 0 29px;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  opacity: 0.72;
+}
+
+.scroll-cue {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.scroll-cue span {
+  font-size: 8px;
+  letter-spacing: 0.32em;
+  writing-mode: vertical-rl;
+}
+
+.scroll-cue i {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  animation: cue-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes cue-bounce {
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.hero-signature {
+  position: absolute;
+  z-index: 10;
+  right: 30px;
+  bottom: 38px;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.24em;
+  writing-mode: vertical-rl;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: max(650px, 100svh);
+  }
+  .hero::after {
+    height: 100px;
+  }
+  .hero-branch {
+    width: 58%;
+    height: 30%;
+  }
+  .hero-sun {
+    width: 65vw;
+  }
+  .mountain {
+    bottom: 14%;
+  }
+  .mountain-back {
+    left: -35%;
+    width: 125%;
+    height: 42%;
+  }
+  .mountain-front {
+    right: -45%;
+    width: 130%;
+    height: 41%;
+  }
+  .hill-back {
+    width: 110%;
+    left: -50%;
+    height: 42%;
+  }
+  .hill-front {
+    width: 130%;
+    right: -70%;
+    height: 43%;
+  }
+  .hero-content {
+    width: calc(100% - 38px);
+    margin-top: -4vh;
+  }
+  .hero h1 {
+    font-size: clamp(4.1rem, 22vw, 6.3rem);
+  }
+  .hero-kicker {
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+  }
+  .hero-kicker span {
+    width: 18px;
+  }
+  .hero-cn {
+    margin-top: 18px;
+    font-size: 1.08rem;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+  }
+  .hero-description {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .hero-signature {
+    display: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .hero h1 {
+    font-size: 4.25rem;
+  }
+  .hero-description {
+    letter-spacing: 0.05em;
+  }
+}

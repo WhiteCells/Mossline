@@ -1,0 +1,113 @@
+.home-loading {
+  min-height: 300px;
+}
+
+.home-loading > p {
+  margin-top: 17px;
+}
+
+.loading-leaf {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--sage);
+  border-radius: 60% 40% 62% 38%;
+  animation: leaf-breathe 1.2s ease-in-out infinite;
+}
+
+@keyframes leaf-breathe {
+  50% {
+    transform: scale(0.88) rotate(-8deg);
+    opacity: 0.7;
+  }
+}
+
+.state-panel {
+  min-height: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 55px 25px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+}
+
+.state-panel h3 {
+  margin: 22px 0 8px;
+  color: var(--heading);
+  font: 600 24px/1.4 var(--serif);
+}
+
+.state-panel p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font: 13px/1.8 var(--serif);
+}
+
+.state-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+  border-radius: 50%;
+  font:
+    italic 30px/1 Georgia,
+    serif;
+}
+
+.error-panel {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.empty-illustration {
+  position: relative;
+  width: 100px;
+  height: 80px;
+  border-bottom: 4px solid var(--sage);
+  border-radius: 50%;
+}
+
+.empty-illustration::before,
+.empty-illustration::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  height: 62px;
+  background: var(--sage);
+  transform: rotate(-22deg);
+}
+
+.empty-illustration::before {
+  left: 43px;
+}
+.empty-illustration::after {
+  right: 33px;
+  height: 47px;
+  transform: rotate(18deg);
+}
+.empty-illustration span,
+.empty-illustration i {
+  position: absolute;
+  width: 25px;
+  height: 14px;
+  background: var(--sage-soft);
+  border-radius: 90% 10%;
+}
+.empty-illustration span {
+  left: 25px;
+  top: 30px;
+  transform: rotate(27deg);
+}
+.empty-illustration i {
+  right: 17px;
+  top: 42px;
+  transform: rotate(-25deg) scaleX(-1);
+}

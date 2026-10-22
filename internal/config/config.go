@@ -1,8 +1,5 @@
-// Package config loads and validates Mossline's runtime configuration.
-//
-// It deliberately does not read .env files. Production processes should inject
-// environment variables, while local development can use the checked-in
-// .env.example with the developer's preferred environment loader.
+// config 负责加载和校验运行配置
+// 只读取 MOSSLINE_* 进程环境变量，开发环境需自行加载 .env，生产环境由部署工具注入配置
 package config
 
 import (
@@ -56,8 +53,7 @@ type Database struct {
 	ConnMaxIdleTime time.Duration
 }
 
-// DSN returns a go-sql-driver/mysql connection string. DATABASE_URL wins when
-// present so managed database providers can supply a complete DSN.
+// DSN 生成 MySQL 连接串，优先使用 MOSSLINE_DATABASE_DSN 提供的完整配置
 func (c Database) DSN() string {
 	if c.URL != "" {
 		return c.URL
@@ -100,73 +96,74 @@ type CORS struct {
 	AllowCredentials bool
 }
 
+// Load 从环境变量读取配置并应用默认值，合并返回解析和校验错误
 func Load() (Config, error) {
 	var errs []error
 
-	dbPort, err := uint16Value("DB_PORT", 3306)
+	dbPort, err := uint16Value("MOSSLINE_DATABASE_PORT", 3306)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	maxOpen, err := intValue("DB_MAX_OPEN_CONNS", 25)
+	maxOpen, err := intValue("MOSSLINE_DATABASE_MAX_OPEN_CONNS", 25)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	maxIdle, err := intValue("DB_MAX_IDLE_CONNS", 10)
+	maxIdle, err := intValue("MOSSLINE_DATABASE_MAX_IDLE_CONNS", 10)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	tokenBytes, err := intValue("AUTH_TOKEN_BYTES", 32)
+	tokenBytes, err := intValue("MOSSLINE_AUTH_TOKEN_BYTES", 32)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	maxUpload, err := int64Value("UPLOAD_MAX_BYTES", 20<<20)
+	maxUpload, err := int64Value("MOSSLINE_STORAGE_MAX_UPLOAD_BYTES", 20<<20)
 	if err != nil {
 		errs = append(errs, err)
 	}
-	allowCredentials, err := boolValue("CORS_ALLOW_CREDENTIALS", false)
+	allowCredentials, err := boolValue("MOSSLINE_CORS_ALLOW_CREDENTIALS", false)
 	if err != nil {
 		errs = append(errs, err)
 	}
 
 	cfg := Config{
-		Environment: stringValue("APP_ENV", Development),
+		Environment: stringValue("MOSSLINE_ENV", Development),
 		Server: Server{
-			Address:          stringValue("SERVER_ADDR", ":8081"),
-			ReadTimeout:      durationValue("SERVER_READ_TIMEOUT", 15*time.Second, &errs),
-			WriteTimeout:     durationValue("SERVER_WRITE_TIMEOUT", 30*time.Second, &errs),
-			ShutdownTimeout:  durationValue("SERVER_SHUTDOWN_TIMEOUT", 10*time.Second, &errs),
-			TrustedProxyCIDR: listValue("TRUSTED_PROXY_CIDRS", nil),
+			Address:          stringValue("MOSSLINE_HTTP_ADDR", ":8081"),
+			ReadTimeout:      durationValue("MOSSLINE_HTTP_READ_TIMEOUT", 15*time.Second, &errs),
+			WriteTimeout:     durationValue("MOSSLINE_HTTP_WRITE_TIMEOUT", 30*time.Second, &errs),
+			ShutdownTimeout:  durationValue("MOSSLINE_HTTP_SHUTDOWN_TIMEOUT", 10*time.Second, &errs),
+			TrustedProxyCIDR: listValue("MOSSLINE_HTTP_TRUSTED_PROXY_CIDRS", nil),
 		},
 		Database: Database{
-			URL:             strings.TrimSpace(os.Getenv("DATABASE_URL")),
-			Host:            stringValue("DB_HOST", "127.0.0.1"),
+			URL:             strings.TrimSpace(os.Getenv("MOSSLINE_DATABASE_DSN")),
+			Host:            stringValue("MOSSLINE_DATABASE_HOST", "127.0.0.1"),
 			Port:            dbPort,
-			Name:            stringValue("DB_NAME", "mossline"),
-			User:            stringValue("DB_USER", "mossline"),
-			Password:        os.Getenv("DB_PASSWORD"),
-			Charset:         stringValue("DB_CHARSET", "utf8mb4"),
-			Location:        stringValue("DB_TIMEZONE", "UTC"),
+			Name:            stringValue("MOSSLINE_DATABASE_NAME", "mossline"),
+			User:            stringValue("MOSSLINE_DATABASE_USERNAME", "mossline"),
+			Password:        os.Getenv("MOSSLINE_DATABASE_PASSWORD"),
+			Charset:         stringValue("MOSSLINE_DATABASE_CHARSET", "utf8mb4"),
+			Location:        stringValue("MOSSLINE_DATABASE_TIMEZONE", "UTC"),
 			MaxOpenConns:    maxOpen,
 			MaxIdleConns:    maxIdle,
-			ConnMaxLifetime: durationValue("DB_CONN_MAX_LIFETIME", 30*time.Minute, &errs),
-			ConnMaxIdleTime: durationValue("DB_CONN_MAX_IDLE_TIME", 5*time.Minute, &errs),
+			ConnMaxLifetime: durationValue("MOSSLINE_DATABASE_CONN_MAX_LIFETIME", 30*time.Minute, &errs),
+			ConnMaxIdleTime: durationValue("MOSSLINE_DATABASE_CONN_MAX_IDLE_TIME", 5*time.Minute, &errs),
 		},
 		Auth: Auth{
-			SessionTTL:             durationValue("AUTH_SESSION_TTL", 24*time.Hour, &errs),
+			SessionTTL:             durationValue("MOSSLINE_AUTH_SESSION_TTL", 24*time.Hour, &errs),
 			TokenBytes:             tokenBytes,
-			BootstrapAdminUsername: strings.TrimSpace(os.Getenv("BOOTSTRAP_ADMIN_USERNAME")),
-			BootstrapAdminPassword: os.Getenv("BOOTSTRAP_ADMIN_PASSWORD"),
-			BootstrapAdminEmail:    strings.TrimSpace(os.Getenv("BOOTSTRAP_ADMIN_EMAIL")),
+			BootstrapAdminUsername: strings.TrimSpace(os.Getenv("MOSSLINE_BOOTSTRAP_ADMIN_USERNAME")),
+			BootstrapAdminPassword: os.Getenv("MOSSLINE_BOOTSTRAP_ADMIN_PASSWORD"),
+			BootstrapAdminEmail:    strings.TrimSpace(os.Getenv("MOSSLINE_BOOTSTRAP_ADMIN_EMAIL")),
 		},
 		Storage: Storage{
-			Driver:           stringValue("STORAGE_DRIVER", "local"),
-			LocalDirectory:   filepath.Clean(stringValue("UPLOAD_DIR", "./data/uploads")),
-			PublicURLPrefix:  strings.TrimRight(stringValue("UPLOAD_PUBLIC_URL", "/uploads"), "/"),
+			Driver:           stringValue("MOSSLINE_STORAGE_DRIVER", "local"),
+			LocalDirectory:   filepath.Clean(stringValue("MOSSLINE_STORAGE_LOCAL_DIR", "./data/uploads")),
+			PublicURLPrefix:  strings.TrimRight(stringValue("MOSSLINE_STORAGE_PUBLIC_URL", "/uploads"), "/"),
 			MaxUploadBytes:   maxUpload,
-			AllowedMIMETypes: listValue("UPLOAD_ALLOWED_MIME_TYPES", []string{"image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "text/plain"}),
+			AllowedMIMETypes: listValue("MOSSLINE_STORAGE_ALLOWED_MIME_TYPES", []string{"image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "text/plain"}),
 		},
 		CORS: CORS{
-			AllowedOrigins:   listValue("CORS_ALLOWED_ORIGINS", []string{"http://localhost:5173", "http://localhost:5174"}),
+			AllowedOrigins:   listValue("MOSSLINE_CORS_ALLOWED_ORIGINS", []string{"http://localhost:5173", "http://localhost:5174"}),
 			AllowCredentials: allowCredentials,
 		},
 	}
@@ -177,47 +174,48 @@ func Load() (Config, error) {
 	return cfg, errors.Join(errs...)
 }
 
+// Validate 检查配置范围及跨字段约束，一次返回所有发现的问题
 func (c Config) Validate() error {
 	var errs []error
 	switch c.Environment {
 	case Development, Test, Production:
 	default:
-		errs = append(errs, fmt.Errorf("APP_ENV must be development, test, or production"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_ENV must be development, test, or production"))
 	}
 	if c.Database.URL == "" {
 		if c.Database.Host == "" || c.Database.Name == "" || c.Database.User == "" {
-			errs = append(errs, fmt.Errorf("DB_HOST, DB_NAME, and DB_USER are required when DATABASE_URL is empty"))
+			errs = append(errs, fmt.Errorf("MOSSLINE_DATABASE_HOST, MOSSLINE_DATABASE_NAME, and MOSSLINE_DATABASE_USERNAME are required when MOSSLINE_DATABASE_DSN is empty"))
 		}
 	} else if _, err := mysql.ParseDSN(c.Database.URL); err != nil {
-		errs = append(errs, fmt.Errorf("DATABASE_URL: %w", err))
+		errs = append(errs, fmt.Errorf("MOSSLINE_DATABASE_DSN: %w", err))
 	}
 	if c.Database.MaxOpenConns < 1 {
-		errs = append(errs, fmt.Errorf("DB_MAX_OPEN_CONNS must be positive"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_DATABASE_MAX_OPEN_CONNS must be positive"))
 	}
 	if c.Database.MaxIdleConns < 0 || c.Database.MaxIdleConns > c.Database.MaxOpenConns {
-		errs = append(errs, fmt.Errorf("DB_MAX_IDLE_CONNS must be between zero and DB_MAX_OPEN_CONNS"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_DATABASE_MAX_IDLE_CONNS must be between zero and MOSSLINE_DATABASE_MAX_OPEN_CONNS"))
 	}
 	if c.Auth.SessionTTL <= 0 || c.Auth.TokenBytes < 32 {
-		errs = append(errs, fmt.Errorf("AUTH_SESSION_TTL must be positive and AUTH_TOKEN_BYTES must be at least 32"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_AUTH_SESSION_TTL must be positive and MOSSLINE_AUTH_TOKEN_BYTES must be at least 32"))
 	}
 	if c.Storage.Driver != "local" {
-		errs = append(errs, fmt.Errorf("STORAGE_DRIVER %q is unsupported; currently only local is available", c.Storage.Driver))
+		errs = append(errs, fmt.Errorf("MOSSLINE_STORAGE_DRIVER %q is unsupported; currently only local is available", c.Storage.Driver))
 	}
 	if c.Storage.LocalDirectory == "." || c.Storage.MaxUploadBytes <= 0 {
-		errs = append(errs, fmt.Errorf("UPLOAD_DIR must name a directory and UPLOAD_MAX_BYTES must be positive"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_STORAGE_LOCAL_DIR must name a directory and MOSSLINE_STORAGE_MAX_UPLOAD_BYTES must be positive"))
 	}
 	if c.Storage.PublicURLPrefix == "" {
-		errs = append(errs, fmt.Errorf("UPLOAD_PUBLIC_URL cannot be empty"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_STORAGE_PUBLIC_URL cannot be empty"))
 	} else if parsed, err := url.Parse(c.Storage.PublicURLPrefix); err != nil || (parsed.IsAbs() && parsed.Scheme != "http" && parsed.Scheme != "https") {
-		errs = append(errs, fmt.Errorf("UPLOAD_PUBLIC_URL must be a URL path or an http(s) URL"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_STORAGE_PUBLIC_URL must be a URL path or an http(s) URL"))
 	}
 	if len(c.Storage.AllowedMIMETypes) == 0 {
-		errs = append(errs, fmt.Errorf("UPLOAD_ALLOWED_MIME_TYPES cannot be empty"))
+		errs = append(errs, fmt.Errorf("MOSSLINE_STORAGE_ALLOWED_MIME_TYPES cannot be empty"))
 	}
 	if c.CORS.AllowCredentials {
 		for _, origin := range c.CORS.AllowedOrigins {
 			if origin == "*" {
-				errs = append(errs, fmt.Errorf("CORS_ALLOWED_ORIGINS cannot contain * when credentials are enabled"))
+				errs = append(errs, fmt.Errorf("MOSSLINE_CORS_ALLOWED_ORIGINS cannot contain * when credentials are enabled"))
 			}
 		}
 	}
@@ -294,6 +292,7 @@ func boolValue(key string, fallback bool) (bool, error) {
 	return parsed, nil
 }
 
+// durationValue 解析带单位的时长，解析失败时记录错误并返回默认值
 func durationValue(key string, fallback time.Duration, errs *[]error) time.Duration {
 	value := strings.TrimSpace(os.Getenv(key))
 	if value == "" {

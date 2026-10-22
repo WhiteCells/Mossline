@@ -98,6 +98,7 @@ func nullable(value string) any {
 	return strings.TrimSpace(value)
 }
 
+// Create 对密码进行 bcrypt 哈希后写入用户，字段校验由 HTTP 层负责
 func (s *Service) Create(ctx context.Context, input CreateRequest) (User, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -115,6 +116,8 @@ func (s *Service) Create(ctx context.Context, input CreateRequest) (User, error)
 	return s.Get(ctx, uint64(id))
 }
 
+// Update 仅写入非空指针字段，空密码表示保持原密码
+// 参数校验及当前用户、最后管理员的保护检查由 HTTP 层负责
 func (s *Service) Update(ctx context.Context, id uint64, input UpdateRequest) (User, error) {
 	set := []string{}
 	args := []any{}
@@ -166,6 +169,7 @@ func (s *Service) Update(ctx context.Context, id uint64, input UpdateRequest) (U
 	return s.Get(ctx, id)
 }
 
+// Delete 在同一事务中移除会话并软删除用户，调用方需先完成账号保护检查
 func (s *Service) Delete(ctx context.Context, ids []uint64) error {
 	if len(ids) == 0 {
 		return nil
@@ -190,6 +194,7 @@ func (s *Service) Delete(ctx context.Context, ids []uint64) error {
 	return tx.Commit()
 }
 
+// CountActiveAdmins 统计未删除且启用的管理员，供 HTTP 层执行保护检查
 func (s *Service) CountActiveAdmins(ctx context.Context) (int, error) {
 	var count int
 	err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM users WHERE role='admin' AND status='active' AND deleted_at IS NULL").Scan(&count)

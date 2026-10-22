@@ -28,6 +28,8 @@ npm run build
 - `/api/*` 反向代理到 Go 服务；
 - `/` 继续使用现有博客前端。
 
+项目已提供 Docker 配置，从根目录运行 `make docker-up` 后访问 `http://localhost:8080/admin/`。管理端由独立容器提供静态文件，经 Web 统一入口代理；单独更新可运行 `make docker-up SERVICE=admin`。详情见 [Docker 维护说明](../docs/docker.md)。
+
 ## API 契约
 
 管理端不提供演示数据。接口不可用时页面会展示错误，`/admin/api-status` 可探测主要接口。
@@ -40,4 +42,8 @@ npm run build
 - 字段错误：建议返回 `errors`、`fieldErrors` 或 `field_errors`，字段值为字符串数组。
 - 附件上传：`POST /api/attachment` multipart，字段包括 `file`、`filename`、`relation_type`、`relation_id` 或 `relation_key`。
 
-完整的后端缺失项见项目根目录 `ADMIN_API_GAPS.md`。
+接口状态及后续增强项见 [接口状态记录](../docs/reference/admin-api-status.md)。
+
+## 源码组织
+
+`src/app` 负责路由、布局和样式，`src/features` 按功能组织页面，`src/shared` 放置跨功能组件、HTTP 客户端、接口路径和工具。测试与代码同目录，执行 `npm run test`。目录约定见 [项目维护说明](../docs/maintenance.md)。

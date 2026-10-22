@@ -26,12 +26,11 @@ type Service struct {
 	sessionTTL time.Duration
 }
 
+// NewService 读取 MOSSLINE_AUTH_SESSION_TTL，会话有效期默认二十四小时
 func NewService(db *sql.DB) *Service {
 	ttl := 24 * time.Hour
-	if value, err := time.ParseDuration(os.Getenv("AUTH_SESSION_TTL")); err == nil && value > 0 && value <= 90*24*time.Hour {
+	if value, err := time.ParseDuration(os.Getenv("MOSSLINE_AUTH_SESSION_TTL")); err == nil && value > 0 && value <= 90*24*time.Hour {
 		ttl = value
-	} else if hours, err := strconv.Atoi(os.Getenv("AUTH_SESSION_HOURS")); err == nil && hours > 0 && hours <= 24*90 {
-		ttl = time.Duration(hours) * time.Hour
 	}
 	return &Service{db: db, sessionTTL: ttl}
 }
@@ -41,6 +40,7 @@ func tokenHash(token string) string {
 	return hex.EncodeToString(sum[:])
 }
 
+// randomToken 使用密码学随机源生成指定字节数的十六进制令牌
 func randomToken(bytes int) (string, error) {
 	buffer := make([]byte, bytes)
 	if _, err := rand.Read(buffer); err != nil {
@@ -64,6 +64,8 @@ func scanUser(scanner interface{ Scan(...any) error }) (User, string, error) {
 	return user, passwordHash, err
 }
 
+// Login 使用用户名或邮箱校验密码，创建会话后返回原始令牌
+// 数据库仅保存令牌摘要，原始令牌只在本次登录响应中返回
 func (s *Service) Login(ctx context.Context, identifier, password string) (LoginResponse, error) {
 	identifier = strings.TrimSpace(identifier)
 	row := s.db.QueryRowContext(ctx, `
@@ -73,7 +75,7 @@ func (s *Service) Login(ctx context.Context, identifier, password string) (Login
 		LIMIT 1`, identifier, identifier)
 	user, passwordHash, err := scanUser(row)
 	if errors.Is(err, sql.ErrNoRows) {
-		// Perform a bcrypt comparison even for unknown users to reduce account enumeration timing differences.
+		// 未知账号也执行 bcrypt 比较，以减小可用于枚举账号的响应时间差异
 		_ = bcrypt.CompareHashAndPassword([]byte("$2a$10$7EqJtq98hPqEX7fNZaFWoO5QwQFQ5QwQFQ5QwQFQ5QwQFQ5QwQFQO"), []byte(password))
 		return LoginResponse{}, ErrInvalidCredentials
 	}
@@ -88,7 +90,7 @@ func (s *Service) Login(ctx context.Context, identifier, password string) (Login
 	}
 
 	tokenBytes := 32
-	if value, parseErr := strconv.Atoi(os.Getenv("AUTH_TOKEN_BYTES")); parseErr == nil && value >= 32 && value <= 128 {
+	if value, parseErr := strconv.Atoi(os.Getenv("MOSSLINE_AUTH_TOKEN_BYTES")); parseErr == nil && value >= 32 && value <= 128 {
 		tokenBytes = value
 	}
 	token, err := randomToken(tokenBytes)
@@ -106,6 +108,7 @@ func (s *Service) Login(ctx context.Context, identifier, password string) (Login
 	return LoginResponse{Token: token, User: user}, nil
 }
 
+// Authenticate 检查令牌摘要、会话有效期和账号状态，并尽力更新访问时间
 func (s *Service) Authenticate(ctx context.Context, token string) (User, error) {
 	if token == "" {
 		return User{}, ErrInvalidSession
@@ -127,6 +130,7 @@ func (s *Service) Authenticate(ctx context.Context, token string) (User, error) 
 	return user, nil
 }
 
+// Logout 删除令牌对应的会话，空令牌或已注销令牌可重复调用
 func (s *Service) Logout(ctx context.Context, token string) error {
 	if token == "" {
 		return nil

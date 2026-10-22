@@ -1,0 +1,102 @@
+.ui-table__sort:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--admin-primary) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.ui-table-card {
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-md);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow-sm);
+}
+.ui-table-scroll {
+  overflow-x: auto;
+}
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.ui-table th {
+  height: 46px;
+  padding: 0 15px;
+  background: var(--admin-surface-subtle);
+  border-bottom: 1px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+.ui-table td {
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--admin-border);
+  vertical-align: middle;
+}
+.ui-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.ui-table tbody tr {
+  transition: background 0.12s ease;
+}
+.ui-table tbody tr:hover {
+  background: color-mix(in srgb, var(--admin-primary-soft) 45%, transparent);
+}
+.ui-table__row--selected {
+  background: var(--admin-primary-soft) !important;
+}
+.ui-table__row--clickable {
+  cursor: pointer;
+}
+.ui-table__left {
+  text-align: left;
+}
+.ui-table__center {
+  text-align: center;
+}
+.ui-table__right {
+  text-align: right;
+}
+.ui-table__selection {
+  width: 46px;
+  text-align: center;
+}
+.ui-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--admin-primary);
+  cursor: pointer;
+}
+.ui-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.ui-table__sort:hover {
+  color: var(--admin-primary);
+}
+.ui-table__sort svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 1024px) {
+  .ui-table__hide-desktop {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .ui-table__hide-tablet {
+    display: none;
+  }
+}

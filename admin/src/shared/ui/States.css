@@ -1,0 +1,69 @@
+.ui-state {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+}
+.ui-state--compact {
+  min-height: 130px;
+  padding: 20px;
+}
+.ui-state__visual {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  background: var(--admin-neutral-soft);
+  color: var(--admin-text-muted);
+}
+.ui-state__visual svg {
+  width: 25px;
+  height: 25px;
+}
+.ui-state__icon {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 12px;
+  color: var(--admin-primary);
+}
+.ui-state h3 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
+.ui-state p {
+  max-width: 440px;
+  margin: 0;
+  color: var(--admin-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.ui-state__action {
+  margin-top: 18px;
+}
+.ui-state--error .ui-state__visual {
+  color: var(--admin-danger);
+  background: var(--admin-danger-soft);
+}
+.ui-skeleton {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--admin-neutral-soft),
+    var(--admin-border),
+    var(--admin-neutral-soft)
+  );
+  background-size: 200% 100%;
+  animation: ui-shimmer 1.4s ease infinite;
+}
+@keyframes ui-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}

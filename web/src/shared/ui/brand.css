@@ -1,0 +1,41 @@
+.brand {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 5px 0;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  font:
+    600 22px/1 Georgia,
+    var(--serif);
+  letter-spacing: 0.02em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: #fff;
+  background: var(--sage);
+  border-radius: 50% 50% 48% 52% / 57% 44% 56% 43%;
+  box-shadow: 0 5px 15px rgba(88, 117, 96, 0.18);
+  transform: rotate(-7deg);
+}
+
+.brand-mark svg {
+  transform: rotate(7deg);
+}
+
+@media (max-width: 760px) {
+  .brand {
+    font-size: 20px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+}

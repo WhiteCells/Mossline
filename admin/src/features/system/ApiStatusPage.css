@@ -1,0 +1,79 @@
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 13px;
+}
+.capability-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 17px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+.capability-card > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+}
+.capability-card > span svg {
+  width: 18px;
+}
+.capability-card .is-ok {
+  color: #548366;
+  background: #e2efe5;
+}
+.capability-card .is-error {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+.capability-card .is-loading {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.capability-card .is-loading svg {
+  animation: spin 1s linear infinite;
+}
+.capability-card h2 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.capability-card code {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.capability-card p {
+  margin: 7px 0 0;
+  font-size: 12px;
+}
+.api-contract {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.api-contract > svg {
+  color: var(--accent);
+}
+.api-contract h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.api-contract ul {
+  margin: 0;
+  padding-left: 19px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+@media (max-width: 640px) {
+  .capability-grid {
+    grid-template-columns: 1fr;
+  }
+}

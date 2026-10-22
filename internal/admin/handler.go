@@ -2,13 +2,13 @@ package admin
 
 import (
 	"database/sql"
-	"net/http"
 	"runtime"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"mossline/internal/auth"
+
 	"mossline/internal/content"
+	"mossline/internal/httpx"
 )
 
 type Handler struct {
@@ -18,6 +18,7 @@ type Handler struct {
 
 func NewHandler(db *sql.DB, started time.Time) *Handler { return &Handler{db: db, started: started} }
 
+// Dashboard 汇总资源数量、近期文章和操作记录，供控制台展示
 func (h *Handler) Dashboard(c *gin.Context) {
 	ctx := c.Request.Context()
 	tables := map[string]string{"users": "users", "posts": "posts", "categories": "categories", "tags": "tags", "moments": "moments", "attachments": "attachments"}
@@ -30,7 +31,7 @@ func (h *Handler) Dashboard(c *gin.Context) {
 		}
 		var count int64
 		if err := h.db.QueryRowContext(ctx, query).Scan(&count); err != nil {
-			auth.Failure(c, 500, "INTERNAL_ERROR", "无法读取控制台统计", nil)
+			httpx.Failure(c, 500, "INTERNAL_ERROR", "无法读取控制台统计", nil)
 			return
 		}
 		stats[key] = count
@@ -38,7 +39,7 @@ func (h *Handler) Dashboard(c *gin.Context) {
 	service := content.NewService(h.db)
 	posts, _, err := service.ListPosts(ctx, content.ListOptions{Page: 1, Size: 6, Admin: true, Sort: "updated_at", Order: "desc"})
 	if err != nil {
-		auth.Failure(c, 500, "INTERNAL_ERROR", "无法读取近期文章", nil)
+		httpx.Failure(c, 500, "INTERNAL_ERROR", "无法读取近期文章", nil)
 		return
 	}
 	var used int64
@@ -57,28 +58,5 @@ func (h *Handler) Dashboard(c *gin.Context) {
 			}
 		}
 	}
-	auth.Success(c, gin.H{"stats": stats, "recent_posts": posts, "recent_operations": operations, "storage": gin.H{"used": used, "total": int64(10) << 30}, "system": gin.H{"api": "healthy", "database": "MySQL 已连接", "cache": "未启用", "uptime": int64(time.Since(h.started).Seconds()), "go": runtime.Version()}})
-}
-
-func (h *Handler) Health(c *gin.Context) {
-	ctx := c.Request.Context()
-	if err := h.db.PingContext(ctx); err != nil {
-		c.JSON(http.StatusServiceUnavailable, gin.H{"status": "down", "database": "unavailable"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"status": "ok", "database": "connected"})
-}
-
-func Audit(db *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Next()
-		if c.Request.Method == http.MethodGet || c.Writer.Status() >= 400 {
-			return
-		}
-		user, ok := auth.CurrentUser(c)
-		if !ok {
-			return
-		}
-		_, _ = db.ExecContext(c.Request.Context(), `INSERT INTO audit_logs(actor_id,action,resource_type,summary,ip_address,user_agent,created_at) VALUES(?,?,?,?,?,?,?)`, user.ID, c.Request.Method+" "+c.FullPath(), "api", c.Request.URL.Path, c.ClientIP(), c.Request.UserAgent(), time.Now().UTC())
-	}
+	httpx.Success(c, gin.H{"stats": stats, "recent_posts": posts, "recent_operations": operations, "storage": gin.H{"used": used, "total": int64(10) << 30}, "system": gin.H{"api": "healthy", "database": "MySQL 已连接", "cache": "未启用", "uptime": int64(time.Since(h.started).Seconds()), "go": runtime.Version()}})
 }

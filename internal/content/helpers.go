@@ -25,6 +25,7 @@ func nullable(value string) any {
 	return strings.TrimSpace(value)
 }
 
+// nullableUint 接受 JSON 数字或字符串 ID，空值表示无关联，非正整数返回错误
 func nullableUint(value any) (any, error) {
 	if value == nil {
 		return nil, nil
@@ -55,6 +56,7 @@ func nullableUint(value any) (any, error) {
 	}
 }
 
+// parseIDs 将输入转换为正整数 ID，去重并保留首次出现的顺序
 func parseIDs(values []any) ([]uint64, error) {
 	seen := map[uint64]struct{}{}
 	ids := make([]uint64, 0, len(values))
@@ -73,6 +75,8 @@ func parseIDs(values []any) ([]uint64, error) {
 	return ids, nil
 }
 
+// parseDate 接受 RFC3339 和兼容日期格式，统一返回 UTC 时间
+// 不带时区的兼容格式按 UTC 解释，空值表示未设置
 func parseDate(value *string) (*time.Time, error) {
 	if value == nil || strings.TrimSpace(*value) == "" {
 		return nil, nil
@@ -86,6 +90,8 @@ func parseDate(value *string) (*time.Time, error) {
 	return nil, ErrInvalid
 }
 
+// normalizePostPublishedAt 规范化发布时间，立即发布不能使用未来时间
+// 定时发布必须提供未来时间，其他状态保留传入时间
 func normalizePostPublishedAt(status string, publishedAt *time.Time, now time.Time) (*time.Time, error) {
 	now = now.UTC()
 	switch status {
@@ -135,6 +141,7 @@ func nullString(value sql.NullString) string {
 	}
 	return ""
 }
+
 func nullTime(value sql.NullTime) *time.Time {
 	if value.Valid {
 		item := value.Time
@@ -143,6 +150,7 @@ func nullTime(value sql.NullTime) *time.Time {
 	return nil
 }
 
+// orderBy 仅从白名单选择 SQL 排序列，未知字段使用默认列，默认降序
 func orderBy(requested, direction, fallback string, allowed map[string]string) string {
 	column := allowed[requested]
 	if column == "" {

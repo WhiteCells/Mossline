@@ -1,0 +1,27 @@
+.page-card {
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.card-heading h2 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+.card-heading p,
+.card-heading a {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.card-heading > a {
+  color: var(--accent);
+}

@@ -1,21 +1,124 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
 services:
   mysql:
+    <<: *service-defaults
     image: mysql:8.4
-    restart: unless-stopped
     environment:
-      MYSQL_DATABASE: mossline
-      MYSQL_USER: mossline
-      MYSQL_PASSWORD: ${DB_PASSWORD:-mossline-local-123}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-local-123}
+      MYSQL_DATABASE: ${MOSSLINE_DATABASE_NAME:-mossline}
+      MYSQL_USER: ${MOSSLINE_DATABASE_USERNAME:-mossline}
+      MYSQL_PASSWORD: ${MOSSLINE_DATABASE_PASSWORD:-mossline-local-123}
+      MYSQL_ROOT_PASSWORD: ${MOSSLINE_DOCKER_MYSQL_ROOT_PASSWORD:-root-local-123}
     ports:
-      - "3307:3306"
+      - "${MOSSLINE_DOCKER_BIND_IP:-127.0.0.1}:${MOSSLINE_DOCKER_MYSQL_HOST_PORT:-3307}:3306"
     volumes:
       - mossline_mysql:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP -h 127.0.0.1 -u "$${MYSQL_USER}" -D "$${MYSQL_DATABASE}" -e "SELECT 1" >/dev/null'
       interval: 5s
       timeout: 3s
       retries: 20
+      start_period: 30s
+
+  api:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+      args:
+        GOPROXY: ${MOSSLINE_DOCKER_GO_PROXY:-https://proxy.golang.org,direct}
+    environment:
+      MOSSLINE_ENV: ${MOSSLINE_ENV:-production}
+      MOSSLINE_HTTP_ADDR: ":8081"
+      MOSSLINE_HTTP_READ_TIMEOUT: ${MOSSLINE_HTTP_READ_TIMEOUT:-15s}
+      MOSSLINE_HTTP_WRITE_TIMEOUT: ${MOSSLINE_HTTP_WRITE_TIMEOUT:-30s}
+      MOSSLINE_HTTP_TRUSTED_PROXY_CIDRS: ${MOSSLINE_HTTP_TRUSTED_PROXY_CIDRS:-}
+      MOSSLINE_HTTP_SHUTDOWN_TIMEOUT: ${MOSSLINE_HTTP_SHUTDOWN_TIMEOUT:-10s}
+      # 容器始终连接同一 Compose 项目的 MySQL，避免使用宿主机地址
+      MOSSLINE_DATABASE_DSN: ""
+      MOSSLINE_DATABASE_HOST: mysql
+      MOSSLINE_DATABASE_PORT: "3306"
+      MOSSLINE_DATABASE_NAME: ${MOSSLINE_DATABASE_NAME:-mossline}
+      MOSSLINE_DATABASE_USERNAME: ${MOSSLINE_DATABASE_USERNAME:-mossline}
+      MOSSLINE_DATABASE_PASSWORD: ${MOSSLINE_DATABASE_PASSWORD:-mossline-local-123}
+      MOSSLINE_DATABASE_CHARSET: ${MOSSLINE_DATABASE_CHARSET:-utf8mb4}
+      MOSSLINE_DATABASE_MAX_OPEN_CONNS: ${MOSSLINE_DATABASE_MAX_OPEN_CONNS:-25}
+      MOSSLINE_DATABASE_MAX_IDLE_CONNS: ${MOSSLINE_DATABASE_MAX_IDLE_CONNS:-10}
+      MOSSLINE_DATABASE_CONN_MAX_LIFETIME: ${MOSSLINE_DATABASE_CONN_MAX_LIFETIME:-30m}
+      MOSSLINE_DATABASE_CONN_MAX_IDLE_TIME: ${MOSSLINE_DATABASE_CONN_MAX_IDLE_TIME:-5m}
+      MOSSLINE_AUTH_SESSION_TTL: ${MOSSLINE_AUTH_SESSION_TTL:-24h}
+      MOSSLINE_AUTH_TOKEN_BYTES: ${MOSSLINE_AUTH_TOKEN_BYTES:-32}
+      MOSSLINE_BOOTSTRAP_ADMIN_USERNAME: ${MOSSLINE_BOOTSTRAP_ADMIN_USERNAME:-}
+      MOSSLINE_BOOTSTRAP_ADMIN_PASSWORD: ${MOSSLINE_BOOTSTRAP_ADMIN_PASSWORD:-}
+      MOSSLINE_BOOTSTRAP_ADMIN_EMAIL: ${MOSSLINE_BOOTSTRAP_ADMIN_EMAIL:-}
+      MOSSLINE_STORAGE_DRIVER: local
+      # 容器内部路径，与宿主机目录及端口配置分开
+      MOSSLINE_STORAGE_LOCAL_DIR: /app/data/uploads
+      MOSSLINE_STORAGE_PUBLIC_URL: ${MOSSLINE_STORAGE_PUBLIC_URL:-/uploads}
+      MOSSLINE_STORAGE_MAX_UPLOAD_BYTES: ${MOSSLINE_STORAGE_MAX_UPLOAD_BYTES:-20971520}
+      MOSSLINE_STORAGE_ALLOWED_MIME_TYPES: ${MOSSLINE_STORAGE_ALLOWED_MIME_TYPES:-image/jpeg,image/png,image/gif,image/webp,application/pdf,text/plain}
+      MOSSLINE_CORS_ALLOWED_ORIGINS: ${MOSSLINE_CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:5174}
+      MOSSLINE_CORS_ALLOW_CREDENTIALS: ${MOSSLINE_CORS_ALLOW_CREDENTIALS:-false}
+    ports:
+      - "${MOSSLINE_DOCKER_BIND_IP:-127.0.0.1}:${MOSSLINE_DOCKER_API_HOST_PORT:-8081}:8081"
+    volumes:
+      - mossline_uploads:/app/data/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+    stop_grace_period: ${MOSSLINE_DOCKER_API_STOP_GRACE_PERIOD:-40s}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 120s
+
+  admin:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      target: admin
+      args:
+        FRONTEND_DIR: admin
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/admin/index.html"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  web:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      target: web
+      args:
+        FRONTEND_DIR: web
+    ports:
+      - "${MOSSLINE_DOCKER_BIND_IP:-127.0.0.1}:${MOSSLINE_DOCKER_WEB_HOST_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+      admin:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/index.html"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
 volumes:
   mossline_mysql:
+  mossline_uploads:

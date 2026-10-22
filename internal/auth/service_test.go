@@ -1,6 +1,22 @@
 package auth
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
+
+func TestNewServiceUsesNamespacedSessionTTL(t *testing.T) {
+	t.Setenv("AUTH_SESSION_TTL", "1h")
+	t.Setenv("AUTH_SESSION_HOURS", "2")
+	t.Setenv("MOSSLINE_AUTH_SESSION_TTL", "12h")
+	if service := NewService(nil); service.sessionTTL != 12*time.Hour {
+		t.Fatalf("sessionTTL = %s, want 12h", service.sessionTTL)
+	}
+	t.Setenv("MOSSLINE_AUTH_SESSION_TTL", "")
+	if service := NewService(nil); service.sessionTTL != 24*time.Hour {
+		t.Fatalf("legacy variables changed default sessionTTL: %s", service.sessionTTL)
+	}
+}
 
 func TestTokenHashIsStableAndDoesNotContainToken(t *testing.T) {
 	token := "secret-session-token"

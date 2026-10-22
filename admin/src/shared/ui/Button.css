@@ -1,0 +1,100 @@
+.ui-button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--admin-radius-sm);
+  padding: 0 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
+  white-space: nowrap;
+}
+.ui-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.ui-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--admin-primary) 28%, transparent);
+  outline-offset: 2px;
+}
+.ui-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.ui-button--primary {
+  background: var(--admin-primary);
+  color: #fff;
+}
+.ui-button--primary:hover:not(:disabled) {
+  background: var(--admin-primary-hover);
+}
+.ui-button--secondary {
+  background: var(--admin-primary-soft);
+  color: var(--admin-primary);
+}
+.ui-button--secondary:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--admin-primary-soft),
+    var(--admin-primary) 10%
+  );
+}
+.ui-button--outline {
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  border-color: var(--admin-border-strong);
+  box-shadow: var(--admin-shadow-sm);
+}
+.ui-button--outline:hover:not(:disabled) {
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+}
+.ui-button--ghost {
+  background: transparent;
+  color: var(--admin-text-muted);
+}
+.ui-button--ghost:hover:not(:disabled) {
+  color: var(--admin-text);
+  background: var(--admin-neutral-soft);
+}
+.ui-button--danger {
+  background: var(--admin-danger);
+  color: #fff;
+}
+.ui-button--danger:hover:not(:disabled) {
+  background: var(--admin-danger-hover);
+}
+.ui-button--sm {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 13px;
+}
+.ui-button--lg {
+  min-height: 46px;
+  padding: 0 20px;
+}
+.ui-button--icon {
+  width: 40px;
+  min-width: 40px;
+  padding: 0;
+}
+.ui-button--sm.ui-button--icon {
+  width: 34px;
+  min-width: 34px;
+}
+.ui-spin {
+  animation: ui-spin 1s linear infinite;
+}
+@keyframes ui-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

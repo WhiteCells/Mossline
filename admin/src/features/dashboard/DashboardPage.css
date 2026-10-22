@@ -1,0 +1,223 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+}
+.stats-grid {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+.stat-card {
+  position: relative;
+  min-height: 142px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.stat-card:after {
+  content: "";
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  right: -25px;
+  bottom: -30px;
+  background: currentColor;
+  opacity: 0.07;
+  border-radius: 50%;
+}
+.stat-card__icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 10px;
+}
+.stat-card__icon svg {
+  width: 19px;
+}
+.stat-card div {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.stat-card strong {
+  font-size: 25px;
+}
+.stat-card span,
+.stat-card small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.stat-card small {
+  align-self: flex-end;
+}
+.stat-card--sage .stat-card__icon {
+  color: #61816d;
+  background: #e5efe7;
+}
+.stat-card--amber .stat-card__icon {
+  color: #a67539;
+  background: #f9edd9;
+}
+.stat-card--blue .stat-card__icon {
+  color: #527b9c;
+  background: #e4eef5;
+}
+.stat-card--violet .stat-card__icon {
+  color: #876a9b;
+  background: #eee7f2;
+}
+.stat-card--cyan .stat-card__icon {
+  color: #457f84;
+  background: #e0f0ef;
+}
+.dashboard-recent {
+  grid-row: span 2;
+}
+.dashboard-activity {
+  grid-column: 1/-1;
+}
+.recent-list {
+  display: grid;
+}
+.recent-list > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+.recent-list > a:first-child {
+  border-top: 0;
+}
+.recent-list div {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.recent-list strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.recent-list small {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.system-list {
+  display: grid;
+  margin: 0;
+}
+.system-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.system-list > div:first-child {
+  border: 0;
+}
+.system-list dt {
+  color: var(--text-muted);
+}
+.system-list dd {
+  margin: 0;
+}
+.storage-meter div {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.storage-meter strong {
+  font-size: 25px;
+}
+.storage-meter span,
+.storage-meter small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.storage-meter progress {
+  width: 100%;
+  height: 7px;
+  margin: 18px 0 10px;
+  accent-color: var(--accent);
+}
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.activity-list > div {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+}
+.activity-list i {
+  width: 7px;
+  height: 7px;
+  margin-top: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.activity-list div div {
+  display: grid;
+  gap: 4px;
+}
+.activity-list strong {
+  font-size: 12px;
+}
+.activity-list small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+@media (max-width: 1180px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-recent,
+  .dashboard-activity {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .activity-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stat-card {
+    min-height: 125px;
+  }
+  .activity-list {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid {
+    gap: 12px;
+  }
+}

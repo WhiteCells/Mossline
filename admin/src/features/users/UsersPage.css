@@ -1,0 +1,46 @@
+.role-chip {
+  padding: 5px 8px;
+  color: var(--text-muted);
+  background: var(--bg-soft);
+  border-radius: 7px;
+  font-size: 11px;
+}
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.user-cell > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+}
+.user-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.user-cell div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.user-cell strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.user-cell small {
+  color: var(--text-muted);
+  font-size: 11px;
+}

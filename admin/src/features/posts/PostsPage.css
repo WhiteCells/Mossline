@@ -1,0 +1,10 @@
+.post-title-cell > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.top-star {
+  width: 15px;
+  color: #c79139;
+  fill: #e8c477;
+}

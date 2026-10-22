@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Repeatable API smoke test for a running Mossline instance.
-# Usage: MOSSLINE_API_URL=http://localhost:8081 MOSSLINE_ADMIN_USER=admin \
-#        MOSSLINE_ADMIN_PASSWORD='...' bash scripts/smoke.sh
+# 验证已启动的 Mossline API，测试参数统一使用 MOSSLINE_SMOKE_* 前缀
+# 用法：MOSSLINE_SMOKE_API_URL=http://localhost:8081 MOSSLINE_SMOKE_ADMIN_USERNAME=admin \
+# 密码通过 MOSSLINE_SMOKE_ADMIN_PASSWORD 设置，然后运行 bash scripts/smoke.sh
 set -euo pipefail
 
-api=${MOSSLINE_API_URL:-http://localhost:8081}
-username=${MOSSLINE_ADMIN_USER:?set MOSSLINE_ADMIN_USER}
-password=${MOSSLINE_ADMIN_PASSWORD:?set MOSSLINE_ADMIN_PASSWORD}
+api=${MOSSLINE_SMOKE_API_URL:-http://localhost:8081}
+username=${MOSSLINE_SMOKE_ADMIN_USERNAME:?请设置 MOSSLINE_SMOKE_ADMIN_USERNAME}
+password=${MOSSLINE_SMOKE_ADMIN_PASSWORD:?请设置 MOSSLINE_SMOKE_ADMIN_PASSWORD}
 suffix=${MOSSLINE_SMOKE_SUFFIX:-$(date +%s)}
 response=$(mktemp /tmp/mossline-smoke-response-XXXXXX)
 trap 'rm -f "$response"' EXIT
@@ -52,7 +52,7 @@ request 401 POST /api/tag '{"name":"Anonymous","slug":"anonymous"}'
 request 422 POST /api/post '{"title":"","slug":"INVALID SLUG"}' "$token"
 request 404 GET "/api/post/not-found-$suffix"
 
-# Cleanup uses the same public REST API and preserves pre-existing site data.
+# 通过相同的公开接口清理测试数据，保留已有站点内容
 request 200 DELETE "/api/post/$post_id" '' "$token"
 request 200 DELETE "/api/moment/$moment_id" '' "$token"
 request 200 DELETE "/api/friend/$friend_id" '' "$token"

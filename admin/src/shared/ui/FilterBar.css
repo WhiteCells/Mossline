@@ -1,0 +1,105 @@
+.ui-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 13px;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-md);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow-sm);
+}
+.ui-filter-bar__fields,
+.ui-filter-bar__filters,
+.ui-filter-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ui-filter-bar__fields {
+  min-width: 0;
+  flex: 1;
+}
+.ui-filter-bar__filters > svg {
+  color: var(--admin-text-muted);
+}
+.ui-search-field {
+  min-width: 220px;
+  max-width: 380px;
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-sm);
+  background: var(--admin-surface-subtle);
+  color: var(--admin-text-muted);
+}
+.ui-search-field:focus-within {
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--admin-primary) 16%, transparent);
+}
+.ui-search-field input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--admin-text);
+}
+.ui-search-field button {
+  display: flex;
+  padding: 2px;
+  border: 0;
+  background: none;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+}
+.ui-search-field button svg {
+  width: 15px;
+  height: 15px;
+}
+.ui-filter-bar select {
+  height: 38px;
+  padding: 0 31px 0 10px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-sm);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+}
+
+@media (max-width: 760px) {
+  .ui-filter-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .ui-filter-bar__fields {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .ui-search-field {
+    width: 100%;
+    max-width: none;
+  }
+  .ui-filter-bar__filters {
+    align-items: stretch;
+  }
+  .ui-filter-bar__filters > svg {
+    margin-top: 10px;
+  }
+  .ui-filter-bar__filters select {
+    flex: 1;
+    min-width: 120px;
+  }
+  .ui-filter-bar__actions {
+    width: 100%;
+  }
+  .ui-filter-bar__actions > .ui-button {
+    flex: 1;
+  }
+}

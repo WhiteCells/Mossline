@@ -1,0 +1,124 @@
+.friends-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 19px;
+}
+
+.friend-card {
+  min-height: 190px;
+  display: grid;
+  grid-template-columns: 54px 1fr 20px;
+  align-items: center;
+  gap: 15px;
+  padding: 28px 25px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  transition: 0.3s ease;
+}
+
+.friend-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+}
+
+.friend-mark {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 58% 42% 61% 39%;
+  font: 500 20px var(--serif);
+}
+
+.friend-mark.sage {
+  background: #78917e;
+}
+.friend-mark.blue {
+  background: #7895a0;
+}
+.friend-mark.violet {
+  background: #8b7b93;
+}
+.friend-mark.amber {
+  background: #b59567;
+}
+.friend-mark.ink {
+  background: #555057;
+}
+.friend-card div {
+  min-width: 0;
+}
+.friend-card strong {
+  color: var(--heading);
+  font: 600 15px var(--serif);
+}
+.friend-card p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font: 10px/1.8 var(--serif);
+}
+.friend-card > svg {
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+.friend-card:hover > svg {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+.neighbor-note {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 45px;
+  margin-top: 65px;
+  padding: 45px 58px;
+  background: var(--sage-soft);
+  border-radius: 25px;
+}
+
+.neighbor-note > div {
+  max-width: 650px;
+}
+.neighbor-note h2 {
+  margin: 11px 0 12px;
+  color: var(--heading);
+  font: 600 2rem var(--serif);
+}
+.neighbor-note p {
+  margin: 0;
+  color: var(--muted);
+  font: 12px/1.9 var(--serif);
+}
+.neighbor-note .primary-button {
+  flex: 0 0 auto;
+}
+.friend-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+@media (max-width: 960px) {
+  .friends-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .friends-grid {
+    grid-template-columns: 1fr;
+  }
+  .neighbor-note {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 35px 27px;
+  }
+}

@@ -1,0 +1,37 @@
+.section-shell {
+  width: min(1160px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.inner-page {
+  padding-top: 82px;
+  padding-bottom: 115px;
+}
+
+.floating-search {
+  position: fixed;
+  z-index: 25;
+  right: 22px;
+  bottom: 22px;
+  width: 47px;
+  height: 47px;
+  display: none;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 10px 30px rgba(199, 91, 125, 0.3);
+}
+
+@media (max-width: 760px) {
+  .section-shell {
+    width: min(100% - 30px, 620px);
+  }
+  .floating-search {
+    display: grid;
+  }
+  .inner-page {
+    padding-top: 60px;
+    padding-bottom: 80px;
+  }
+}

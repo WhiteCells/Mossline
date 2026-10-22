@@ -1,0 +1,33 @@
+.ui-confirm {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: flex-start;
+  gap: 14px;
+}
+.ui-confirm__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--admin-warning-soft);
+  color: var(--admin-warning);
+}
+.ui-confirm__icon--danger {
+  background: var(--admin-danger-soft);
+  color: var(--admin-danger);
+}
+.ui-confirm__description {
+  color: var(--admin-text-muted);
+  line-height: 1.65;
+}
+.ui-confirm__impact {
+  margin-top: 13px;
+  padding: 11px 13px;
+  border-left: 3px solid var(--admin-danger);
+  border-radius: 4px;
+  background: var(--admin-danger-soft);
+  color: var(--admin-danger);
+  font-size: 13px;
+  line-height: 1.55;
+}

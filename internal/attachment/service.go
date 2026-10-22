@@ -2,21 +2,11 @@ package attachment
 
 import (
 	"context"
-	"crypto/rand"
-	"crypto/sha256"
 	"database/sql"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"io"
-	"mime"
-	"mime/multipart"
-	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
-	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -38,11 +28,7 @@ func NewService(db *sql.DB, storage config.Storage) *Service {
 	return &Service{db: db, storage: storage}
 }
 
-type ListOptions struct {
-	Page, Size                                              int
-	Search, Type, Referenced, DateFrom, DateTo, Sort, Order string
-}
-
+// List 查询附件及已保存内容的引用，临时上传关联不计入已引用筛选
 func (s *Service) List(ctx context.Context, opt ListOptions) ([]Attachment, int64, error) {
 	where := []string{"a.deleted_at IS NULL"}
 	args := []any{}
@@ -140,153 +126,7 @@ func (s *Service) references(ctx context.Context, id uint64) ([]Reference, error
 	return refs, rows.Err()
 }
 
-func adminURL(ownerType string, id uint64) string {
-	switch ownerType {
-	case "post":
-		return fmt.Sprintf("/admin/posts/%d/edit", id)
-	case "moment":
-		return fmt.Sprintf("/admin/moments/%d/edit", id)
-	case "user":
-		return "/admin/users"
-	case "friend":
-		return "/admin/friends"
-	case "about":
-		return "/admin/about"
-	}
-	return ""
-}
-
-func randomName() (string, error) {
-	b := make([]byte, 16)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
-}
-
-func safeDisplayName(value string) string {
-	value = filepath.Base(strings.TrimSpace(value))
-	value = strings.Map(func(r rune) rune {
-		if r < 32 || strings.ContainsRune(`<>:"/\\|?*`, r) {
-			return -1
-		}
-		return r
-	}, value)
-	if value == "" || value == "." {
-		return "attachment"
-	}
-	if len([]rune(value)) > 180 {
-		value = string([]rune(value)[:180])
-	}
-	return value
-}
-
-var canonicalExt = map[string]string{"image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif", "image/webp": ".webp", "application/pdf": ".pdf", "text/plain": ".txt"}
-
-func (s *Service) Upload(ctx context.Context, userID uint64, header *multipart.FileHeader, displayName, ownerType, ownerIDText, relationKey string) (Attachment, error) {
-	if ownerType == "article" {
-		ownerType = "post"
-	}
-	if header == nil || header.Size <= 0 || header.Size > s.storage.MaxUploadBytes {
-		return Attachment{}, ErrInvalid
-	}
-	file, err := header.Open()
-	if err != nil {
-		return Attachment{}, err
-	}
-	defer file.Close()
-	peek := make([]byte, 512)
-	n, err := io.ReadFull(file, peek)
-	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
-		return Attachment{}, ErrInvalid
-	}
-	peek = peek[:n]
-	mimeType := http.DetectContentType(peek)
-	if normalized, _, parseErr := mime.ParseMediaType(mimeType); parseErr == nil {
-		mimeType = normalized
-	}
-	allowed := false
-	for _, m := range s.storage.AllowedMIMETypes {
-		if mimeType == m {
-			allowed = true
-			break
-		}
-	}
-	if !allowed {
-		return Attachment{}, ErrInvalid
-	}
-	if _, err = file.Seek(0, io.SeekStart); err != nil {
-		return Attachment{}, err
-	}
-	random, err := randomName()
-	if err != nil {
-		return Attachment{}, err
-	}
-	now := time.Now().UTC()
-	ext := canonicalExt[mimeType]
-	if ext == "" {
-		ext = strings.ToLower(filepath.Ext(header.Filename))
-		if len(ext) > 10 {
-			ext = ""
-		}
-	}
-	storageKey := filepath.ToSlash(filepath.Join(now.Format("2006"), now.Format("01"), random+ext))
-	fullPath := filepath.Join(s.storage.LocalDirectory, filepath.FromSlash(storageKey))
-	if err := os.MkdirAll(filepath.Dir(fullPath), 0750); err != nil {
-		return Attachment{}, err
-	}
-	out, err := os.OpenFile(fullPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0640)
-	if err != nil {
-		return Attachment{}, err
-	}
-	hash := sha256.New()
-	written, copyErr := io.Copy(io.MultiWriter(out, hash), io.LimitReader(file, s.storage.MaxUploadBytes+1))
-	closeErr := out.Close()
-	if copyErr != nil || closeErr != nil || written > s.storage.MaxUploadBytes {
-		_ = os.Remove(fullPath)
-		return Attachment{}, ErrInvalid
-	}
-	original := safeDisplayName(displayName)
-	if strings.TrimSpace(displayName) == "" {
-		original = safeDisplayName(header.Filename)
-	}
-	publicURL := strings.TrimRight(s.storage.PublicURLPrefix, "/") + "/" + storageKey
-	result, err := s.db.ExecContext(ctx, `INSERT INTO attachments(user_id,original_name,file_name,storage_key,mime_type,size,url,checksum_sha256,created_at) VALUES(NULLIF(?,0),?,?,?,?,?,?,?,?)`, userID, original, filepath.Base(storageKey), storageKey, mimeType, written, publicURL, hex.EncodeToString(hash.Sum(nil)), now)
-	if err != nil {
-		_ = os.Remove(fullPath)
-		return Attachment{}, err
-	}
-	id, _ := result.LastInsertId()
-	if validOwnerType(ownerType) {
-		var ownerID any = nil
-		if parsed, e := strconv.ParseUint(ownerIDText, 10, 64); e == nil && parsed > 0 {
-			ownerID = parsed
-		}
-		relationKey = strings.TrimSpace(relationKey)
-		if relationKey == "" {
-			relationKey = "content"
-		}
-		if len(relationKey) > 64 {
-			relationKey = relationKey[:64]
-		}
-		_, err = s.db.ExecContext(ctx, `INSERT INTO attachment_refs(attachment_id,owner_type,owner_id,relation_key,title,created_at) VALUES(?,?,?,?,?,?)`, id, ownerType, ownerID, relationKey, original, now)
-		if err != nil {
-			_, _ = s.db.ExecContext(ctx, "DELETE FROM attachments WHERE id=?", id)
-			_ = os.Remove(fullPath)
-			return Attachment{}, err
-		}
-	}
-	return s.Get(ctx, uint64(id))
-}
-
-func validOwnerType(v string) bool {
-	switch v {
-	case "post", "moment", "about", "user", "friend":
-		return true
-	}
-	return false
-}
-
+// Rename 仅修改展示名称，保留存储路径和公开地址
 func (s *Service) Rename(ctx context.Context, id uint64, name string) (Attachment, error) {
 	name = safeDisplayName(name)
 	if name == "attachment" {
@@ -303,6 +143,8 @@ func (s *Service) Rename(ctx context.Context, id uint64, name string) (Attachmen
 	return s.Get(ctx, id)
 }
 
+// Delete 拒绝删除被已保存内容引用的附件，先提交软删除再移除本地文件
+// 文件移除失败时尝试恢复记录，数据库和文件系统之间不具备原子事务
 func (s *Service) Delete(ctx context.Context, id uint64) error {
 	item, err := s.Get(ctx, id)
 	if err != nil {
@@ -332,14 +174,15 @@ func (s *Service) Delete(ctx context.Context, id uint64) error {
 		return err
 	}
 	if err = os.Remove(filepath.Join(s.storage.LocalDirectory, filepath.FromSlash(item.StorageKey))); err != nil && !errors.Is(err, os.ErrNotExist) {
-		// Compensate the soft-delete if local storage removal failed so the
-		// attachment remains visible and the operator can retry safely.
+		// 文件删除失败时尝试撤销软删除，使附件保持可见以便重试
 		_, _ = s.db.ExecContext(ctx, "UPDATE attachments SET deleted_at=NULL WHERE id=?", id)
 		return fmt.Errorf("file removal failed and record was restored: %w", err)
 	}
 	return nil
 }
 
+// DeleteBatch 先检查全部附件的引用，再逐个删除
+// 中途失败会保留此前已完成的删除，不保证整批回滚
 func (s *Service) DeleteBatch(ctx context.Context, ids []uint64) error {
 	for _, id := range ids {
 		var n int
@@ -356,64 +199,4 @@ func (s *Service) DeleteBatch(ctx context.Context, ids []uint64) error {
 		}
 	}
 	return nil
-}
-
-// SyncReferences finalizes uploads made before an owner existed and records any
-// existing attachment URLs embedded in Markdown. It must be called in the same
-// transaction as the content write.
-func SyncReferences(ctx context.Context, tx *sql.Tx, ownerType string, ownerID uint64, relationKey, title, content string) error {
-	if !validOwnerType(ownerType) {
-		return ErrInvalid
-	}
-	if relationKey != "" {
-		// Provisional editor references exist only to protect uploads before the
-		// owning record is saved. Rebuild authoritative references from the
-		// submitted Markdown so removed images do not remain falsely referenced.
-		if _, err := tx.ExecContext(ctx, `DELETE FROM attachment_refs WHERE owner_type=? AND relation_key=? AND (owner_id IS NULL OR owner_id=?)`, ownerType, relationKey, ownerID); err != nil {
-			return err
-		}
-	}
-	rows, err := tx.QueryContext(ctx, `SELECT id,url FROM attachments WHERE deleted_at IS NULL`)
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
-	type found struct {
-		id  uint64
-		url string
-	}
-	var all []found
-	for rows.Next() {
-		var f found
-		if err := rows.Scan(&f.id, &f.url); err != nil {
-			return err
-		}
-		all = append(all, f)
-	}
-	if err := rows.Err(); err != nil {
-		return err
-	}
-	if _, err = tx.ExecContext(ctx, `DELETE FROM attachment_refs WHERE owner_type=? AND owner_id=? AND relation_key='content'`, ownerType, ownerID); err != nil {
-		return err
-	}
-	for _, f := range all {
-		if !strings.Contains(content, f.url) {
-			continue
-		}
-		_, err = tx.ExecContext(ctx, `INSERT IGNORE INTO attachment_refs(attachment_id,owner_type,owner_id,relation_key,title,created_at) VALUES(?,?,?,?,?,?)`, f.id, ownerType, ownerID, "content", title, time.Now().UTC())
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func IDsFromURLs(content string) []string {
-	re := regexp.MustCompile(`https?://[^\s)]+|/uploads/[^\s)]+`)
-	return re.FindAllString(content, -1)
-}
-
-func ValidatePublicURL(raw string) bool {
-	parsed, err := url.Parse(raw)
-	return err == nil && (parsed.Scheme == "http" || parsed.Scheme == "https") && parsed.Host != ""
 }

@@ -1,0 +1,111 @@
+.articles-section {
+  position: relative;
+  z-index: 12;
+  padding: 98px 0 118px;
+}
+
+.page-link-button {
+  width: max-content;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 42px auto 0;
+  padding: 0 23px;
+  color: var(--heading);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  transition: 0.25s ease;
+}
+
+.page-link-button:hover {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.category-filter::-webkit-scrollbar {
+  display: none;
+}
+
+.category-filter button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 16px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: 0.2s ease;
+}
+
+.category-filter button:hover,
+.category-filter button.is-active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.posts-list {
+  display: grid;
+  gap: 34px;
+}
+
+.load-more {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 45px auto 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+}
+
+.load-more i {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 50%;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.load-more:hover i {
+  background: var(--accent-deep);
+  transform: translateY(4px);
+}
+
+@media (max-width: 760px) {
+  .articles-section {
+    padding: 75px 0 88px;
+  }
+  .category-filter {
+    margin-right: -15px;
+    padding-right: 15px;
+  }
+  .posts-list {
+    gap: 23px;
+  }
+}

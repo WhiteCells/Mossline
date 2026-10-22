@@ -1,0 +1,128 @@
+.upload-queue progress {
+  width: 100%;
+  height: 7px;
+  margin: 18px 0 10px;
+  accent-color: var(--accent);
+}
+.attachment-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.attachment-cell > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+}
+.attachment-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.attachment-cell div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.attachment-cell strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.attachment-cell small {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.reference-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.reference-count svg {
+  width: 13px;
+}
+.upload-queue {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.upload-queue > div > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.upload-queue progress {
+  margin: 8px 0 0;
+}
+.attachment-preview > img {
+  display: block;
+  max-width: 100%;
+  max-height: 60vh;
+  margin: auto;
+  border-radius: 12px;
+}
+.attachment-preview dl {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+.attachment-preview dl > div {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 8px;
+  font-size: 12px;
+}
+.attachment-preview dt {
+  color: var(--text-muted);
+}
+.attachment-preview dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.attachment-preview h3 {
+  font-size: 14px;
+}
+.reference-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.reference-list > * {
+  padding: 7px 9px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.file-preview {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+}
+.file-preview svg {
+  width: 42px;
+  height: 42px;
+  color: var(--text-muted);
+}

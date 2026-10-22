@@ -1,0 +1,48 @@
+.ui-pagination select {
+  height: 38px;
+  padding: 0 31px 0 10px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-sm);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+}
+
+.ui-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 2px 0;
+  color: var(--admin-text-muted);
+  font-size: 13px;
+}
+.ui-pagination__meta,
+.ui-pagination__pages,
+.ui-pagination__meta label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ui-pagination__pages {
+  justify-content: flex-end;
+}
+.ui-pagination__pages .ui-button {
+  font-variant-numeric: tabular-nums;
+}
+.ui-pagination__ellipsis {
+  min-width: 24px;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .ui-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ui-pagination__pages {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 3px;
+  }
+}

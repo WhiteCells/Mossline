@@ -1,0 +1,14 @@
+.api-notice {
+  margin-bottom: 18px;
+}
+.api-notice {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  color: var(--warning-text);
+  background: var(--warning-soft);
+  border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+}

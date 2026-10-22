@@ -3,6 +3,7 @@ module mossline
 go 1.26.5
 
 require (
+	github.com/danielgtaylor/huma/v2 v2.39.1
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-sql-driver/mysql v1.9.3
 	golang.org/x/crypto v0.54.0

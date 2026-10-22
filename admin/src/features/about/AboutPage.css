@@ -1,0 +1,22 @@
+.about-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  align-items: start;
+  gap: 18px;
+}
+.about-meta {
+  position: sticky;
+  top: 82px;
+}
+.about-preview {
+  padding: 10px;
+  min-height: 400px;
+}
+@media (max-width: 900px) {
+  .about-editor {
+    grid-template-columns: 1fr;
+  }
+  .about-meta {
+    position: static;
+  }
+}

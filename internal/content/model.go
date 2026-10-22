@@ -1,6 +1,8 @@
 package content
 
-import "time"
+import (
+	"time"
+)
 
 type UserSummary struct {
 	ID       uint64 `json:"id"`
@@ -94,55 +96,4 @@ type About struct {
 	PublishedAt *time.Time `json:"published_at"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
-}
-
-type ListOptions struct {
-	Page, Size                      int
-	Search, Status, Sort, Order     string
-	Category, Tag, DateFrom, DateTo string
-	Admin                           bool
-}
-
-type ResourceInput struct {
-	Name        *string `json:"name"`
-	Slug        *string `json:"slug"`
-	Description *string `json:"description"`
-	ParentID    any     `json:"parent_id"`
-	Sort        *int    `json:"sort"`
-	Activate    *bool   `json:"activate"`
-	URI         *string `json:"uri"`
-	Logo        *string `json:"logo"`
-	Desc        *string `json:"desc"`
-	Group       *string `json:"group"`
-}
-
-type PostInput struct {
-	Title                 *string `json:"title"`
-	Slug                  *string `json:"slug"`
-	Desc                  *string `json:"desc"`
-	Cover                 *string `json:"cover"`
-	CategoryID            any     `json:"category_id"`
-	TagIDs                []any   `json:"tag_ids"`
-	Content               *string `json:"content"`
-	ContentType           *string `json:"content_type"`
-	Status                *string `json:"status"`
-	IsTop                 *bool   `json:"is_top"`
-	PublishedAt           *string `json:"published_at"`
-	SEOTitle              *string `json:"seo_title"`
-	SEODescription        *string `json:"seo_description"`
-	AttachmentRelationKey string  `json:"attachment_relation_key"`
-}
-
-type MomentInput struct {
-	Content               *string `json:"content"`
-	Status                *string `json:"status"`
-	Visibility            *string `json:"visibility"`
-	PublishedAt           *string `json:"published_at"`
-	AttachmentRelationKey string  `json:"attachment_relation_key"`
-}
-
-type AboutInput struct {
-	Content               string `json:"content"`
-	Status                string `json:"status"`
-	AttachmentRelationKey string `json:"attachment_relation_key"`
 }
