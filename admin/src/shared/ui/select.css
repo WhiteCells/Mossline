@@ -1,0 +1,70 @@
+/* 统一表单、筛选栏和分页选择框的焦点，兼容原生选择器。 */
+select:focus {
+  outline: none;
+  border-color: var(--admin-focus-border);
+  box-shadow: none;
+}
+select option {
+  color: var(--admin-text);
+  background: var(--admin-surface);
+}
+select option:checked {
+  color: var(--admin-primary);
+  background: var(--admin-selection);
+}
+
+/* 支持可定制原生选择器的浏览器使用主题菜单，其余保留系统交互。 */
+@supports (appearance: base-select) {
+  select:not([multiple]):not([size]),
+  select:not([multiple]):not([size])::picker(select) {
+    appearance: base-select;
+  }
+  select:not([multiple]):not([size]) {
+    align-items: center;
+    gap: 10px;
+    padding-right: 12px;
+    cursor: pointer;
+  }
+  select:not([multiple]):not([size])::picker-icon {
+    color: var(--admin-text-muted);
+    width: 14px;
+    margin-left: auto;
+  }
+  select::picker(select) {
+    margin-block: 6px;
+    padding: 5px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: var(--admin-surface-raised);
+    color: var(--admin-text);
+    box-shadow: var(--admin-shadow-md);
+    max-height: min(320px, 45svh);
+    overflow-y: auto;
+  }
+  select option {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+  }
+  select option:hover,
+  select option:focus {
+    outline: none;
+    background: var(--admin-surface-subtle);
+  }
+  select option:checked {
+    background: var(--admin-selection);
+    color: var(--admin-primary);
+  }
+  select option::checkmark {
+    color: var(--admin-primary);
+  }
+  select option:disabled {
+    color: var(--admin-text-muted);
+    cursor: default;
+  }
+}

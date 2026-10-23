@@ -1,82 +1,96 @@
 :root {
-  --admin-bg: #f5f7f3;
-  --admin-surface: #ffffff;
-  --admin-surface-subtle: #f8faf7;
-  --admin-surface-raised: #ffffff;
-  --admin-text: #17201b;
-  --admin-text-muted: #66716a;
-  --admin-border: #e1e7e2;
-  --admin-border-strong: #ccd5ce;
-  --admin-primary: #277a50;
-  --admin-primary-hover: #206a44;
-  --admin-primary-soft: #e8f5ed;
-  --admin-danger: #c73944;
-  --admin-danger-hover: #aa2934;
-  --admin-danger-soft: #fcecef;
-  --admin-warning: #a7650c;
-  --admin-warning-soft: #fff4d8;
-  --admin-info: #3268c0;
-  --admin-info-soft: #eaf1ff;
-  --admin-neutral-soft: #eef1ef;
-  --admin-accent: #7956c6;
-  --admin-accent-soft: #f1ebff;
-  --admin-sidebar: #17261e;
-  --admin-sidebar-muted: #91a197;
-  --admin-sidebar-hover: #24382d;
-  --admin-sidebar-active: #eaf7ef;
-  --admin-shadow-sm: 0 1px 2px rgba(20, 35, 27, 0.06);
-  --admin-shadow-md: 0 14px 35px rgba(21, 35, 27, 0.12);
-  --admin-radius-sm: 7px;
-  --admin-radius-md: 11px;
-  --admin-radius-lg: 16px;
+  color-scheme: light;
+  --admin-bg: #faf8f6;
+  --admin-surface: #fffdfc;
+  --admin-surface-subtle: #f5f0ed;
+  --admin-surface-raised: #fffdfc;
+  --admin-text: #494045;
+  --admin-text-strong: #332e31;
+  --admin-text-muted: #81747c;
+  --admin-border: #e9e1e3;
+  --admin-border-strong: #d6c8ce;
+  --admin-primary: #b45c77;
+  --admin-primary-hover: #9d4964;
+  --admin-primary-foreground: #fff;
+  --admin-primary-soft: #f8e8ed;
+  --admin-success: #55715d;
+  --admin-success-soft: #e9efe9;
+  --admin-danger: #bd3f52;
+  --admin-danger-hover: #a53245;
+  --admin-danger-soft: #fbe9ed;
+  --admin-warning: #95611f;
+  --admin-warning-soft: #f8efdf;
+  --admin-info: #4c7190;
+  --admin-info-soft: #e9eff5;
+  --admin-neutral-soft: #f1ecee;
+  --admin-accent: var(--admin-primary);
+  --admin-accent-soft: var(--admin-primary-soft);
+  --admin-sidebar: var(--admin-surface);
+  --admin-sidebar-muted: var(--admin-text-muted);
+  --admin-sidebar-hover: var(--admin-surface-subtle);
+  --admin-sidebar-active: var(--admin-primary-soft);
+  --admin-sage: #77907e;
+  --admin-sage-soft: #e5ede6;
+  --admin-shadow-sm: 0 4px 20px rgba(89, 65, 75, 0.035);
+  --admin-shadow-md: 0 18px 48px rgba(89, 65, 75, 0.12);
+  --admin-focus-border: color-mix(
+    in srgb,
+    var(--admin-text-muted) 38%,
+    var(--admin-border)
+  );
+  --admin-selection: color-mix(
+    in srgb,
+    var(--admin-primary) 14%,
+    var(--admin-surface)
+  );
+  --admin-overlay: rgba(30, 24, 30, 0.32);
+  --admin-dialog-shadow: 0 20px 64px rgba(35, 24, 33, 0.16);
+  --admin-radius-sm: 8px;
+  --admin-radius-md: 12px;
+  --admin-radius-lg: 14px;
+  --admin-serif: "Noto Serif SC", "Songti SC", Georgia, serif;
   color: var(--admin-text);
   background: var(--admin-bg);
   font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+    Inter, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
 :root[data-theme="dark"] {
-  --admin-bg: #111613;
-  --admin-surface: #19201c;
-  --admin-surface-subtle: #1e2722;
-  --admin-surface-raised: #212a25;
-  --admin-text: #edf2ee;
-  --admin-text-muted: #a2aea7;
-  --admin-border: #303a34;
-  --admin-border-strong: #465149;
-  --admin-primary: #62bd89;
-  --admin-primary-hover: #79ca9b;
-  --admin-primary-soft: #213e2e;
-  --admin-danger: #f2767e;
-  --admin-danger-hover: #ff9097;
-  --admin-danger-soft: #46262b;
-  --admin-warning: #e2a94d;
-  --admin-warning-soft: #45371d;
-  --admin-info: #7faaf5;
-  --admin-info-soft: #263a5c;
-  --admin-neutral-soft: #2b332e;
-  --admin-accent: #b598f3;
-  --admin-accent-soft: #382d50;
-  --admin-sidebar: #101713;
-  --admin-sidebar-hover: #1d2b23;
-  --admin-sidebar-active: #dff2e7;
-  --admin-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.18);
-  --admin-shadow-md: 0 18px 42px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+  --admin-overlay: rgba(8, 6, 10, 0.48);
+  --admin-dialog-shadow: 0 20px 64px rgba(0, 0, 0, 0.3);
+  --admin-bg: #171519;
+  --admin-surface: #242025;
+  --admin-surface-subtle: #2c262d;
+  --admin-surface-raised: #2c262d;
+  --admin-text: #eee7ea;
+  --admin-text-strong: #fff8fb;
+  --admin-text-muted: #b7a8b0;
+  --admin-border: #3b323a;
+  --admin-border-strong: #5e4b58;
+  --admin-primary: #e8a3b9;
+  --admin-primary-hover: #f2b8cb;
+  --admin-primary-foreground: #33202a;
+  --admin-primary-soft: #3b2933;
+  --admin-success: #a4bea9;
+  --admin-success-soft: #27372c;
+  --admin-danger: #f18f9e;
+  --admin-danger-hover: #ffadba;
+  --admin-danger-soft: #442b34;
+  --admin-warning: #e0b97c;
+  --admin-warning-soft: #3d3227;
+  --admin-info: #9fbdd7;
+  --admin-info-soft: #29333f;
+  --admin-neutral-soft: #322b32;
+  --admin-sage: #a4bea9;
+  --admin-sage-soft: #29372e;
+  --admin-shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --admin-shadow-md: 0 18px 48px rgba(0, 0, 0, 0.3);
 }
 
 :root {
-  font-family:
-    Inter, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
   --bg: var(--admin-bg);
   --bg-soft: var(--admin-surface-subtle);
   --surface: var(--admin-surface);

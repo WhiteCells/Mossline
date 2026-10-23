@@ -1,3 +1,4 @@
+import { FieldLabel } from "../ui/FieldLabel";
 import {
   Bold,
   CheckSquare,
@@ -518,9 +519,9 @@ export function MarkdownEditor({
       onDrop={handleDrop}
     >
       <div className="markdown-editor__heading">
-        <label htmlFor={id}>
+        <FieldLabel htmlFor={id}>
           {label} {required ? <span aria-hidden="true">*</span> : null}
-        </label>
+        </FieldLabel>
         <span className={dirty ? "markdown-editor__dirty" : ""}>
           {dirty ? "有未保存更改" : "已保存"}
         </span>

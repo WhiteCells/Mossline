@@ -1,9 +1,17 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Bell,
   ChevronDown,
   LogOut,
+  Leaf,
+  ArrowUpRight,
   Menu,
   Moon,
   PanelLeftClose,
@@ -13,10 +21,11 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { Badge, Button } from "../../shared/ui";
+import { useAdminTheme } from "../../shared/hooks/useAdminTheme";
+import { Button } from "../../shared/ui";
 
 export type SystemStatus = "operational" | "degraded" | "offline";
-export type ThemeMode = "light" | "dark";
+export type { ThemeMode } from "../../shared/hooks/useAdminTheme";
 
 export interface AdminNavItem {
   label: string;
@@ -63,15 +72,6 @@ const statusContent: Record<
   offline: { label: "服务不可用", tone: "danger" },
 };
 
-function getInitialTheme(): ThemeMode {
-  if (typeof window === "undefined") return "light";
-  const saved = localStorage.getItem("mossline-admin-theme");
-  if (saved === "light" || saved === "dark") return saved;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
-
 function initials(name: string) {
   return Array.from(name.trim()).slice(0, 2).join("").toUpperCase() || "U";
 }
@@ -94,15 +94,33 @@ export function AdminLayout({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const { theme, toggleTheme } = useAdminTheme();
+  const location = useLocation();
+  const contentRef = useRef<HTMLElement>(null);
+  const pageName =
+    navigation
+      .flatMap((group) => group.items)
+      .find((item) =>
+        item.to === "/"
+          ? location.pathname === "/"
+          : location.pathname === item.to ||
+            location.pathname.startsWith(item.to + "/"),
+      )?.label ?? "内容管理";
   const userMenuRef = useRef<HTMLDivElement>(null);
   const currentStatus = statusContent[systemStatus];
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-    localStorage.setItem("mossline-admin-theme", theme);
-  }, [theme]);
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animation = contentRef.current?.animate(
+      [
+        { opacity: 0, transform: "translateY(6px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      { duration: 180, easing: "ease-out" },
+    );
+    return () => animation?.cancel();
+  }, [location.pathname]);
 
   useEffect(() => {
     setMobileSidebarOpen(false);
@@ -128,10 +146,15 @@ export function AdminLayout({
 
   useEffect(() => {
     if (!mobileSidebarOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileSidebarOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
     };
   }, [mobileSidebarOpen]);
 
@@ -162,7 +185,7 @@ export function AdminLayout({
       >
         <div className="admin-sidebar__brand">
           <div className="admin-sidebar__mark" aria-hidden="true">
-            {brandMark ?? <span>M</span>}
+            {brandMark ?? <Leaf strokeWidth={1.7} />}
           </div>
           <div className="admin-sidebar__brand-copy">
             <strong>{brandName}</strong>
@@ -246,12 +269,23 @@ export function AdminLayout({
             >
               <Menu aria-hidden="true" />
             </Button>
-            <Badge tone={currentStatus.tone} dot>
-              {systemStatusText ?? currentStatus.label}
-            </Badge>
+            <div className="admin-topbar__breadcrumb">
+              <span>工作台</span>
+              <span aria-hidden="true">/</span>
+              <strong>{pageName}</strong>
+            </div>
           </div>
           <div className="admin-topbar__actions">
             {headerActions}
+            <a
+              className="admin-topbar__site-link"
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>访问首页</span>
+              <ArrowUpRight aria-hidden="true" />
+            </a>
             <Button
               variant="ghost"
               size="icon"
@@ -259,9 +293,7 @@ export function AdminLayout({
                 theme === "dark" ? "切换至浅色主题" : "切换至深色主题"
               }
               title={theme === "dark" ? "浅色主题" : "深色主题"}
-              onClick={() =>
-                setTheme((value) => (value === "dark" ? "light" : "dark"))
-              }
+              onClick={toggleTheme}
             >
               {theme === "dark" ? (
                 <Sun aria-hidden="true" />
@@ -269,27 +301,30 @@ export function AdminLayout({
                 <Moon aria-hidden="true" />
               )}
             </Button>
-            <button
-              className="admin-topbar__notification"
-              type="button"
-              onClick={onNotificationsClick}
-              aria-label={
-                notificationCount > 0
-                  ? `${notificationCount} 条未读通知`
-                  : "通知"
-              }
-            >
-              <Bell aria-hidden="true" />
-              {notificationCount > 0 && (
-                <span>
-                  {notificationCount > 99 ? "99+" : notificationCount}
-                </span>
-              )}
-            </button>
+            {onNotificationsClick && (
+              <button
+                className="admin-topbar__notification"
+                type="button"
+                onClick={onNotificationsClick}
+                aria-label={
+                  notificationCount > 0
+                    ? `${notificationCount} 条未读通知`
+                    : "通知"
+                }
+              >
+                <Bell aria-hidden="true" />
+                {notificationCount > 0 && (
+                  <span>
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </span>
+                )}
+              </button>
+            )}
             <div className="admin-user-menu" ref={userMenuRef}>
               <button
                 type="button"
                 className="admin-user-menu__trigger"
+                aria-label="账号菜单"
                 aria-haspopup="menu"
                 aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen((value) => !value)}
@@ -332,7 +367,9 @@ export function AdminLayout({
             </div>
           </div>
         </header>
-        <main className="admin-content">{children ?? <Outlet />}</main>
+        <main className="admin-content" ref={contentRef}>
+          {children ?? <Outlet />}
+        </main>
       </div>
     </div>
   );

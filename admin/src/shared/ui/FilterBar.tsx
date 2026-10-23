@@ -25,11 +25,11 @@ export function FilterBar({
     <div className="ui-filter-bar" role="search">
       <div className="ui-filter-bar__fields">
         {onSearchChange && (
-          <label className="ui-search-field">
-            <span className="sr-only">搜索</span>
+          <div className="ui-search-field">
             <Search aria-hidden="true" />
             <input
               type="search"
+              aria-label="搜索"
               value={search ?? ""}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder={searchPlaceholder}
@@ -43,7 +43,7 @@ export function FilterBar({
                 <X aria-hidden="true" />
               </button>
             )}
-          </label>
+          </div>
         )}
         {children && (
           <div className="ui-filter-bar__filters">

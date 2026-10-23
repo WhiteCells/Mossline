@@ -65,7 +65,11 @@ export function PostCard({ post, index }: PostCardProps) {
               <Icon name="message" size={15} /> {post.comments_count}
             </span>
           </div>
-          <Link className="read-more" to={path}>
+          <Link
+            className="read-more"
+            to={path}
+            aria-label={`阅读《${post.title}》`}
+          >
             <span>查看文章</span>
             <Icon name="arrow" size={18} />
           </Link>

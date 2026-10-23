@@ -23,7 +23,7 @@
   animation: ui-toast-in 0.22s ease;
 }
 .ui-toast--success {
-  border-left-color: var(--admin-primary);
+  border-left-color: var(--admin-success);
 }
 .ui-toast--error {
   border-left-color: var(--admin-danger);
@@ -37,7 +37,7 @@
   color: var(--admin-info);
 }
 .ui-toast--success .ui-toast__icon {
-  color: var(--admin-primary);
+  color: var(--admin-success);
 }
 .ui-toast--error .ui-toast__icon {
   color: var(--admin-danger);

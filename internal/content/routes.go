@@ -19,4 +19,5 @@ func RegisterRoutes(api *apidoc.Router, db *sql.DB) {
 	registerPostsRoutes(api, handler, optional, editor)
 	registerMomentsRoutes(api, handler, optional, editor)
 	registerAboutRoutes(api, handler, optional, editor)
+	registerAppearanceRoutes(api, handler, auth.Middleware(db, "admin"))
 }

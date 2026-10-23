@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { useCallback, useState } from 'react'
+import { Route, useLocation, useNavigate } from 'react-router-dom'
+import { PageTransition } from './PageTransition'
 import { Footer } from './layout/Footer'
 import { Header } from './layout/Header'
 import { Icon } from '../shared/ui/Icon'
@@ -27,10 +28,6 @@ function App() {
 
   const closeSearch = useCallback(() => setSearchOpen(false), [])
 
-  useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [location.pathname])
-
   const search = (query: string) => {
     navigate(query ? `/articles?q=${encodeURIComponent(query)}` : '/articles')
   }
@@ -42,31 +39,29 @@ function App() {
         onThemeToggle={toggleTheme}
         onSearch={() => setSearchOpen(true)}
       />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage resource={resource} />} />
-          <Route
-            path="/articles"
-            element={
-              <ArticlesPage
-                resource={resource}
-                searchQuery={searchQuery}
-                onClearSearch={() => navigate('/articles')}
-              />
-            }
-          />
-          <Route path="/articles/:slug" element={<ArticleDetailPage />} />
-          <Route
-            path="/categories"
-            element={<CategoriesPage resource={resource} />}
-          />
-          <Route path="/tags" element={<TagsPage resource={resource} />} />
-          <Route path="/moments" element={<MomentsPage />} />
-          <Route path="/friends" element={<FriendsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
+      <PageTransition>
+        <Route path="/" element={<HomePage resource={resource} />} />
+        <Route
+          path="/articles"
+          element={
+            <ArticlesPage
+              resource={resource}
+              searchQuery={searchQuery}
+              onClearSearch={() => navigate('/articles')}
+            />
+          }
+        />
+        <Route path="/articles/:slug" element={<ArticleDetailPage />} />
+        <Route
+          path="/categories"
+          element={<CategoriesPage resource={resource} />}
+        />
+        <Route path="/tags" element={<TagsPage resource={resource} />} />
+        <Route path="/moments" element={<MomentsPage />} />
+        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </PageTransition>
       <Footer />
       <SearchDialog
         open={searchOpen}

@@ -1,4 +1,37 @@
 const paths = {
+  home: (
+    <>
+      <path d="m3 10 9-7 9 7v10H3Z" />
+      <path d="M9 20v-7h6v7" />
+    </>
+  ),
+  file: (
+    <>
+      <path d="M14 3H5v18h14V8Z" />
+      <path d="M14 3v5h5M8 12h8M8 16h5" />
+    </>
+  ),
+  folder: <path d="M3 7V4h6l3 3h9v13H3Z" />,
+  tag: (
+    <>
+      <path d="M3 3h8l10 10-8 8L3 11Z" />
+      <circle cx="7.5" cy="7.5" r="1" />
+    </>
+  ),
+  link: (
+    <>
+      <path
+        d="m10 13 4-4M8 15l-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0M16 9l1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0"
+        transform="translate(1 -1) scale(.9)"
+      />
+    </>
+  ),
+  info: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v6M12 7v.2" />
+    </>
+  ),
   search: (
     <>
       <circle cx="11" cy="11" r="7" />

@@ -26,7 +26,7 @@
   color: var(--admin-text-muted);
 }
 .ui-search-field {
-  min-width: 220px;
+  min-width: min(220px, 100%);
   max-width: 380px;
   flex: 1;
   height: 40px;
@@ -34,21 +34,22 @@
   align-items: center;
   gap: 8px;
   padding: 0 11px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--admin-border);
   border-radius: var(--admin-radius-sm);
-  background: var(--admin-surface-subtle);
+  background: var(--admin-surface);
   color: var(--admin-text-muted);
+  transition: border-color 0.18s ease;
 }
-.ui-search-field:focus-within {
-  border-color: var(--admin-primary);
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--admin-primary) 16%, transparent);
+.ui-search-field:has(input:focus) {
+  border-color: var(--admin-focus-border);
+  box-shadow: none;
 }
 .ui-search-field input {
   min-width: 0;
   flex: 1;
   border: 0;
   outline: 0;
+  box-shadow: none;
   background: transparent;
   color: var(--admin-text);
 }
@@ -64,13 +65,21 @@
   width: 15px;
   height: 15px;
 }
-.ui-filter-bar select {
-  height: 38px;
+.ui-filter-bar select,
+.ui-filter-bar input[type="date"] {
+  height: 40px;
+  font-size: 12px;
   padding: 0 31px 0 10px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--admin-border);
   border-radius: var(--admin-radius-sm);
   background: var(--admin-surface);
   color: var(--admin-text);
+}
+
+.ui-filter-bar input[type="date"]:focus {
+  border-color: var(--admin-focus-border);
+  outline: none;
+  box-shadow: none;
 }
 
 @media (max-width: 760px) {
@@ -92,7 +101,8 @@
   .ui-filter-bar__filters > svg {
     margin-top: 10px;
   }
-  .ui-filter-bar__filters select {
+  .ui-filter-bar__filters select,
+  .ui-filter-bar__filters input[type="date"] {
     flex: 1;
     min-width: 120px;
   }
@@ -102,4 +112,8 @@
   .ui-filter-bar__actions > .ui-button {
     flex: 1;
   }
+}
+
+.ui-search-field input:focus-visible {
+  outline: none;
 }

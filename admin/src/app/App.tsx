@@ -7,6 +7,7 @@ import {
   Gauge,
   Info,
   Link2,
+  Palette,
   Tags,
   Users,
   Zap,
@@ -74,6 +75,11 @@ const AboutPage = lazy(() =>
     default: module.AboutPage,
   })),
 );
+const AppearancePage = lazy(() =>
+  import("../features/appearance/AppearancePage").then((module) => ({
+    default: module.AppearancePage,
+  })),
+);
 const ApiStatusPage = lazy(() =>
   import("../features/system/ApiStatusPage").then((module) => ({
     default: module.ApiStatusPage,
@@ -103,6 +109,7 @@ const navigation: AdminNavGroup[] = [
     label: "系统",
     items: [
       { label: "用户管理", to: "/users", icon: Users },
+      { label: "外观设置", to: "/appearance", icon: Palette },
       { label: "API 状态", to: "/api-status", icon: Activity },
     ],
   },
@@ -139,13 +146,6 @@ function AuthenticatedLayout() {
       }}
       systemStatus="operational"
       systemStatusText="管理端已连接"
-      notificationCount={0}
-      onNotificationsClick={() =>
-        toast({
-          title: "暂无通知",
-          description: "通知中心需要后端提供通知接口。",
-        })
-      }
       onLogout={signOut}
     />
   );
@@ -187,6 +187,7 @@ export default function App() {
             <Route path="friends" element={<FriendsPage />} />
             <Route path="attachments" element={<AttachmentsPage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="appearance" element={<AppearancePage />} />
             <Route path="api-status" element={<ApiStatusPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

@@ -1,3 +1,4 @@
+import { FieldLabel } from "../ui/FieldLabel";
 import type { FormValue, ResourceField } from "./resourceTypes";
 
 interface ResourceFormFieldProps {
@@ -78,10 +79,10 @@ export function ResourceFormField({
 
   return (
     <div className={`field ${field.full ? "field--full" : ""}`}>
-      <label htmlFor={id}>
+      <FieldLabel htmlFor={id}>
         {field.label}
         {field.required && <span className="required">*</span>}
-      </label>
+      </FieldLabel>
       {renderInput()}
       {error && <span className="field-error">{error}</span>}
       {field.hint && <span className="field-hint">{field.hint}</span>}

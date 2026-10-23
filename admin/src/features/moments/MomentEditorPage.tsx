@@ -1,3 +1,4 @@
+import { FieldLabel } from "../../shared/ui/FieldLabel";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Save, Send } from "lucide-react";
@@ -180,7 +181,7 @@ export function MomentEditorPage() {
           <section className="form-section form-stack">
             <h2 className="form-section-title">发布设置</h2>
             <div className="field">
-              <label htmlFor="moment-status">状态</label>
+              <FieldLabel htmlFor="moment-status">状态</FieldLabel>
               <select
                 id="moment-status"
                 className="select"
@@ -196,7 +197,7 @@ export function MomentEditorPage() {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="moment-visible">可见性</label>
+              <FieldLabel htmlFor="moment-visible">可见性</FieldLabel>
               <select
                 id="moment-visible"
                 className="select"
@@ -211,7 +212,7 @@ export function MomentEditorPage() {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="moment-time">发布时间</label>
+              <FieldLabel htmlFor="moment-time">发布时间</FieldLabel>
               <input
                 id="moment-time"
                 className="input"

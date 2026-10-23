@@ -18,7 +18,7 @@
 }
 .ui-pagination__meta,
 .ui-pagination__pages,
-.ui-pagination__meta label {
+.ui-pagination__size {
   display: flex;
   align-items: center;
   gap: 8px;

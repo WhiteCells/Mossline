@@ -1,3 +1,4 @@
+import { FieldLabel } from "../../shared/ui/FieldLabel";
 import { useEffect, useMemo, useState, type Key } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Edit3, Plus, Power, Trash2 } from "lucide-react";
@@ -367,12 +368,12 @@ export function UsersPage() {
               className={`field ${key === "password" ? "field--full" : ""}`}
               key={key}
             >
-              <label htmlFor={`user-${key}`}>
+              <FieldLabel htmlFor={`user-${key}`}>
                 {label}
                 {["username", "nickname", "email"].includes(key) && (
                   <span className="required">*</span>
                 )}
-              </label>
+              </FieldLabel>
               <input
                 id={`user-${key}`}
                 className="input"
@@ -392,7 +393,7 @@ export function UsersPage() {
             </div>
           ))}
           <div className="field">
-            <label htmlFor="user-role">角色</label>
+            <FieldLabel htmlFor="user-role">角色</FieldLabel>
             <select
               id="user-role"
               className="select"
@@ -406,7 +407,7 @@ export function UsersPage() {
             </select>
           </div>
           <div className="field">
-            <label htmlFor="user-status">状态</label>
+            <FieldLabel htmlFor="user-status">状态</FieldLabel>
             <select
               id="user-status"
               className="select"

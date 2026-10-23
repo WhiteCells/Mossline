@@ -5,11 +5,20 @@
   justify-content: center;
   gap: 8px;
   padding: 0 15px;
-  color: #fff;
+  color: var(--admin-primary-foreground);
   background: var(--accent);
-  border-radius: 10px;
+  border-radius: var(--admin-radius-sm);
+  border: 1px solid transparent;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 500;
+}
+.ui-link-button:hover {
+  background: var(--admin-primary-hover);
+}
+.ui-link-button--outline:hover {
+  background: var(--admin-primary-soft);
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
 }
 .ui-link-button svg,
 .icon-link svg,

@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  min-height: max(690px, 100svh);
+  min-height: 100svh;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -26,19 +26,57 @@
     linear-gradient(180deg, #31242d 0%, #28232a 42%, #202623 72%, #171a18 100%);
 }
 
-.hero::after {
-  content: '';
+/* 背景、插画、蒙版与文字分别叠放，图片不可用时显示默认插画。 */
+.hero-illustration {
   position: absolute;
-  z-index: 8;
-  inset: auto 0 0;
-  height: 165px;
-  background: linear-gradient(
-    to top,
-    var(--bg) 0%,
-    color-mix(in srgb, var(--bg) 55%, transparent) 42%,
-    transparent 100%
-  );
+  inset: 0;
+  z-index: -1;
+  isolation: isolate;
+}
+.hero.has-background .hero-illustration {
+  visibility: hidden;
+}
+.hero-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+.hero-mask {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
+}
+.hero.has-overlay .hero-mask {
+  background-image: radial-gradient(
+    rgba(15, 19, 22, 0.32) 0.7px,
+    transparent 0.9px
+  );
+  background-size: 3px 3px;
+  background-color: rgba(20, 25, 28, 0.08);
+}
+.hero.has-background .hero-content {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+.hero.has-background .hero-description {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  background: rgba(15, 20, 24, 0.45);
+  opacity: 1;
+}
+.hero-waves {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  fill: var(--bg);
+  pointer-events: none;
+  z-index: 6;
 }
 
 .hero-sun {
@@ -337,59 +375,12 @@
   opacity: 0.72;
 }
 
-.scroll-cue {
-  position: absolute;
-  z-index: 10;
-  left: 50%;
-  bottom: 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  background: transparent;
-  cursor: pointer;
-}
-
-.scroll-cue span {
-  font-size: 8px;
-  letter-spacing: 0.32em;
-  writing-mode: vertical-rl;
-}
-
-.scroll-cue i {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  animation: cue-bounce 1.8s ease-in-out infinite;
-}
-
-@keyframes cue-bounce {
-  50% {
-    transform: translateY(5px);
-  }
-}
-
-.hero-signature {
-  position: absolute;
-  z-index: 10;
-  right: 30px;
-  bottom: 38px;
-  color: var(--muted);
-  font-size: 8px;
-  letter-spacing: 0.24em;
-  writing-mode: vertical-rl;
-}
-
 @media (max-width: 760px) {
   .hero {
-    min-height: max(650px, 100svh);
+    min-height: 100svh;
   }
-  .hero::after {
-    height: 100px;
+  .hero-waves {
+    height: 40px;
   }
   .hero-branch {
     width: 58%;
@@ -445,9 +436,6 @@
   .hero-description {
     font-size: 10px;
     letter-spacing: 0.12em;
-  }
-  .hero-signature {
-    display: none;
   }
 }
 

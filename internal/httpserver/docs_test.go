@@ -104,6 +104,12 @@ func TestOpenAPIDocument(t *testing.T) {
 	if len(spec.Paths["/api/admin/users"]["get"].Security) != 1 {
 		t.Fatal("admin users must require authentication")
 	}
+	if len(spec.Paths["/api/site/appearance"]["get"].Security) != 0 {
+		t.Fatal("site appearance must permit anonymous reads")
+	}
+	if len(spec.Paths["/api/site/appearance"]["put"].Security) != 1 {
+		t.Fatal("site appearance updates must require authentication")
+	}
 	// 检查所有本地模型引用都能找到对应定义
 	var tree any
 	if err := json.Unmarshal(data, &tree); err != nil {
@@ -200,6 +206,7 @@ func TestHumaGinErrorResponses(t *testing.T) {
 		{http.MethodGet, "/api/me", "", "UNAUTHORIZED", http.StatusUnauthorized},
 		{http.MethodPost, "/api/post", `{}`, "UNAUTHORIZED", http.StatusUnauthorized},
 		{http.MethodGet, "/api/admin/users", "", "UNAUTHORIZED", http.StatusUnauthorized},
+		{http.MethodPut, "/api/site/appearance", `{}`, "UNAUTHORIZED", http.StatusUnauthorized},
 	} {
 		t.Run(tc.method+tc.path+tc.code, func(t *testing.T) {
 			request := httptest.NewRequest(tc.method, tc.path, strings.NewReader(tc.body))

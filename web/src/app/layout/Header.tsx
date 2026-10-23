@@ -1,17 +1,17 @@
 import type { CSSProperties } from 'react'
 import type { Theme } from '../../shared/hooks/useTheme'
-import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import { Icon } from '../../shared/ui/Icon'
 
 const navigation = [
-  ['首页', '/'],
-  ['文章', '/articles'],
-  ['分类', '/categories'],
-  ['标签', '/tags'],
-  ['动态', '/moments'],
-  ['友链', '/friends'],
-  ['关于', '/about'],
+  ['首页', '/', 'home'],
+  ['文章', '/articles', 'file'],
+  ['分类', '/categories', 'folder'],
+  ['标签', '/tags', 'tag'],
+  ['动态', '/moments', 'spark'],
+  ['友链', '/friends', 'link'],
+  ['关于', '/about', 'info'],
 ] as const
 
 interface HeaderProps {
@@ -21,15 +21,14 @@ interface HeaderProps {
 }
 
 export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
-  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const location = useLocation()
+  const [scrolled, setScrolled] = useState(() => window.scrollY > 24)
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 24)
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+  useLayoutEffect(() => {
+    const updateScrolled = () => setScrolled(window.scrollY > 24)
+    updateScrolled()
+    window.addEventListener('scroll', updateScrolled, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrolled)
   }, [])
 
   useEffect(() => {
@@ -39,7 +38,7 @@ export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
 
   return (
     <header
-      className={`site-header ${scrolled || menuOpen || location.pathname !== '/' ? 'is-scrolled' : ''}`}
+      className={`site-header${scrolled ? ' is-scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
     >
       <div className="header-inner">
         <Link className="brand" to="/" aria-label="返回首页">
@@ -50,7 +49,7 @@ export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
         </Link>
 
         <nav className="desktop-nav" aria-label="主导航">
-          {navigation.map(([label, path]) => (
+          {navigation.map(([label, path, icon]) => (
             <NavLink
               key={path}
               className={({ isActive }) =>
@@ -59,6 +58,7 @@ export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
               to={path}
               end={path === '/'}
             >
+              <Icon name={icon} size={15} />
               {label}
             </NavLink>
           ))}
@@ -79,14 +79,19 @@ export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
           >
             <Icon name={theme === 'light' ? 'moon' : 'sun'} />
           </button>
-          <a className="login-button" href="/admin/">
-            <Icon name="user" size={17} />
-            <span>登录</span>
+          <a
+            className="icon-button login-button"
+            href="/admin/"
+            aria-label="登录"
+            title="登录"
+          >
+            <Icon name="user" />
           </a>
           <button
             className="icon-button menu-button"
             onClick={() => setMenuOpen((open) => !open)}
-            aria-label="打开导航菜单"
+            aria-label={menuOpen ? '关闭导航菜单' : '打开导航菜单'}
+            aria-controls="mobile-navigation"
             aria-expanded={menuOpen}
           >
             <Icon name={menuOpen ? 'close' : 'menu'} />
@@ -95,6 +100,7 @@ export function Header({ theme, onThemeToggle, onSearch }: HeaderProps) {
       </div>
 
       <div
+        id="mobile-navigation"
         className={`mobile-menu ${menuOpen ? 'is-open' : ''}`}
         aria-hidden={!menuOpen}
       >

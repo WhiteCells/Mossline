@@ -4,19 +4,23 @@
   inset: 0 0 auto;
   height: var(--header-height);
   color: var(--text);
+  background: transparent;
   border-bottom: 1px solid transparent;
+  view-transition-name: site-header;
   transition:
-    height 0.35s ease,
     color 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .site-header.is-scrolled {
-  height: 68px;
-  color: var(--text);
-  background: var(--surface-glass);
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: 0 1px 12px rgba(40, 30, 35, 0.06);
+}
+
+.site-header.is-menu-open {
+  background: var(--surface);
   border-color: var(--line);
   box-shadow: 0 5px 24px rgba(64, 44, 53, 0.06);
   backdrop-filter: blur(18px) saturate(140%);
@@ -38,7 +42,7 @@
   left: 50%;
   display: flex;
   align-items: center;
-  gap: clamp(17px, 1.9vw, 30px);
+  gap: clamp(16px, 1.7vw, 25px);
   margin-left: 0;
   white-space: nowrap;
   transform: translate(-50%, -50%);
@@ -46,6 +50,9 @@
 
 .desktop-nav .nav-link {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 11px 0;
   color: inherit;
   background: none;
@@ -85,29 +92,7 @@
   margin-left: auto;
 }
 
-.login-button {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 4px;
-  padding: 0 17px;
-  color: var(--surface);
-  background: var(--heading);
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 13px;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-.login-button:hover {
-  background: var(--accent-deep) !important;
-  transform: translateY(-2px);
-}
-
-.menu-button {
+.header-actions .menu-button {
   display: none;
 }
 
@@ -130,19 +115,19 @@
 
 @media (max-width: 960px) {
   .desktop-nav,
-  .login-button {
+  .header-actions .login-button {
     display: none;
   }
   .header-actions {
     margin-left: auto;
   }
-  .menu-button {
+  .header-actions .menu-button {
     display: grid;
   }
   .mobile-menu {
     position: fixed;
     display: block;
-    inset: 68px 0 0;
+    inset: var(--header-height) 0 0;
     padding: 30px max(25px, 8vw);
     color: var(--text);
     background: var(--surface-glass);
@@ -212,5 +197,30 @@
   }
   .header-actions .icon-button:not(.menu-button) {
     display: none;
+  }
+}
+
+/* 有自定义首屏背景时，以浅色导航和轻微阴影保持对比；滚动后恢复主题色。 */
+.app-shell:has(.hero.has-background)
+  .site-header:not(.is-scrolled):not(.is-menu-open) {
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+  background: linear-gradient(rgba(15, 20, 24, 0.3), transparent);
+}
+.app-shell:has(.hero.has-background)
+  .site-header:not(.is-scrolled):not(.is-menu-open)
+  .nav-link.is-active {
+  color: #fff;
+}
+@media (min-width: 961px) and (max-width: 1120px) {
+  .desktop-nav {
+    gap: 13px;
+  }
+  .desktop-nav .nav-link {
+    gap: 4px;
+  }
+  .desktop-nav .nav-link svg {
+    width: 13px;
+    height: 13px;
   }
 }

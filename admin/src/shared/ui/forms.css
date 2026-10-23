@@ -23,7 +23,7 @@
   gap: 5px;
   color: var(--text-strong);
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 500;
 }
 .field label small {
   margin-left: auto;
@@ -42,12 +42,11 @@
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--admin-radius-sm);
   outline: 0;
   font: inherit;
-  transition:
-    border-color 0.18s,
-    box-shadow 0.18s;
+  font-size: 13px;
+  transition: border-color 0.18s ease;
 }
 .textarea {
   min-height: 108px;
@@ -57,13 +56,15 @@
 .input:focus,
 .select:focus,
 .textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-color: var(--admin-focus-border);
+  box-shadow: none;
+  outline: none;
 }
 .input[aria-invalid="true"],
 .select[aria-invalid="true"],
 .textarea[aria-invalid="true"] {
   border-color: var(--danger);
+  box-shadow: none;
 }
 .field-error {
   color: var(--danger);
@@ -115,7 +116,11 @@
 }
 .form-section-title {
   margin: 0 0 18px;
-  font-size: 15px;
+  padding-bottom: 13px;
+  border-bottom: 1px dashed var(--border);
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 500;
 }
 .inline-fields {
   display: flex;

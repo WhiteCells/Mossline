@@ -19,7 +19,6 @@
   transform: translateY(-1px);
 }
 
-.hero-button,
 .primary-button {
   min-height: 46px;
   display: inline-flex;
@@ -40,19 +39,16 @@
     box-shadow 0.25s ease;
 }
 
-.hero-button:hover,
 .primary-button:hover {
   background: var(--accent-deep);
   box-shadow: 0 12px 30px rgba(197, 97, 126, 0.24);
   transform: translateY(-3px);
 }
 
-.hero-button svg,
 .primary-button svg {
   transition: transform 0.2s ease;
 }
 
-.hero-button:hover svg,
 .primary-button:hover svg {
   transform: translateX(4px);
 }

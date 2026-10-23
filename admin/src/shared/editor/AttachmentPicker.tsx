@@ -11,6 +11,8 @@ import type { AttachmentLibraryItem } from "./types";
 
 export interface AttachmentPickerProps {
   open: boolean;
+  title?: string;
+  description?: string;
   items: readonly AttachmentLibraryItem[];
   loading?: boolean;
   error?: string | null;
@@ -33,6 +35,8 @@ const isImageAttachment = (item: AttachmentLibraryItem) =>
 
 export function AttachmentPicker({
   open,
+  title = "从附件库插入",
+  description = "选择图片会插入图片语法，其他文件会插入普通链接。",
   items,
   loading = false,
   error,
@@ -80,8 +84,8 @@ export function AttachmentPicker({
       >
         <header className="attachment-picker__header">
           <div>
-            <h2 id="attachment-picker-title">从附件库插入</h2>
-            <p>选择图片会插入图片语法，其他文件会插入普通链接。</p>
+            <h2 id="attachment-picker-title">{title}</h2>
+            <p>{description}</p>
           </div>
           <button
             type="button"
@@ -94,19 +98,20 @@ export function AttachmentPicker({
         </header>
 
         <div className="attachment-picker__filters">
-          <label className="attachment-picker__search">
+          <div className="attachment-picker__search">
             <Search size={16} aria-hidden="true" />
             <input
               ref={searchRef}
               value={query}
               placeholder="搜索附件名称"
+              aria-label="搜索附件名称"
               onChange={(event) => {
                 const value = event.target.value;
                 setQuery(value);
                 onSearch?.(value);
               }}
             />
-          </label>
+          </div>
           {onRefresh ? (
             <button
               type="button"

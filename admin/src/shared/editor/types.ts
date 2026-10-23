@@ -1,6 +1,6 @@
 export type EditorMode = "edit" | "split" | "preview";
 
-export type AttachmentOwnerType = "article" | "moment" | "about";
+export type AttachmentOwnerType = "article" | "moment" | "about" | "site";
 
 export interface AttachmentOwner {
   type: AttachmentOwnerType;

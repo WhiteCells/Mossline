@@ -1,6 +1,6 @@
 # Mossline
 
-> Mossline 寓意“时间留下的痕迹”。
+> Mossline 寓意“时间留下的痕迹，让时间冲淡往事“
 
 一套基于 Go/Gin、MySQL 与 React / TypeScript 的内容管理系统，包含公开 Web 站点、Admin 管理端、附件本地存储、Bearer 会话认证和 OpenAPI 文档。
 
@@ -58,6 +58,10 @@ make docker-migrate             # MySQL 健康后，运行一次性 API 容器�
 6. 分别运行 `npm --prefix web run dev` 与 `npm --prefix admin run dev`。
 
 API 默认位于 `http://localhost:8081`，Huma 默认交互式文档位于 `/docs`，原生 OpenAPI 3.1 文档位于 `/openapi.json` 与 `/openapi.yaml`。Vite 开发服务器会将 `/api` 和 `/uploads` 代理到 API。
+
+## 首页外观
+
+管理员登录后可在「系统 → 外观设置」中上传或选择首页背景图，分别配置桌面端与手机端，并开启或关闭点状蒙版。点击「保存设置」后生效。手机端未配置图片时沿用桌面端背景；桌面端留空或图片加载失败时显示默认插画。正在使用的背景附件受引用保护，清除背景并保存后才可删除。
 
 ## 接口文档
 

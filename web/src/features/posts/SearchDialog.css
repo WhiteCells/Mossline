@@ -6,8 +6,8 @@
   place-items: start center;
   padding: 11vh 24px 30px;
   overflow-y: auto;
-  background: rgba(30, 24, 28, 0.62);
-  backdrop-filter: blur(10px);
+  background: var(--dialog-overlay);
+  backdrop-filter: blur(3px);
   animation: fade-in 0.2s ease both;
 }
 
@@ -22,14 +22,14 @@
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 25px;
-  box-shadow: 0 35px 90px rgba(25, 15, 20, 0.3);
+  border-radius: 16px;
+  box-shadow: var(--dialog-shadow);
   animation: dialog-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 @keyframes dialog-in {
   from {
     opacity: 0;
-    transform: translateY(-18px) scale(0.98);
+    transform: translateY(-8px);
   }
 }
 .dialog-topline {
@@ -51,13 +51,14 @@
   gap: 12px;
   padding: 6px 7px 6px 17px;
   color: var(--muted);
-  background: var(--bg-soft);
+  background: color-mix(in srgb, var(--bg-soft) 65%, var(--surface));
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
+  transition: border-color 0.18s ease;
 }
-.search-dialog > form:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+.search-dialog > form:has(input:focus) {
+  border-color: var(--focus-border);
+  box-shadow: none;
 }
 .search-dialog input {
   min-width: 0;
@@ -67,7 +68,15 @@
   background: transparent;
   border: 0;
   outline: 0;
-  font-size: 13px;
+  font-size: 14px;
+  caret-color: var(--accent-deep);
+}
+.search-dialog input:focus-visible {
+  outline: 0;
+}
+.search-dialog input::placeholder {
+  color: color-mix(in srgb, var(--muted) 80%, var(--text));
+  opacity: 1;
 }
 .clear-search {
   width: 32px;
@@ -78,15 +87,26 @@
   background: transparent;
   border-radius: 50%;
   cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+.clear-search:hover {
+  color: var(--text);
+  background: var(--bg-soft);
 }
 .search-submit {
   height: 40px;
   padding: 0 19px;
-  color: #fff;
-  background: var(--accent);
-  border-radius: 10px;
+  color: var(--text);
+  background: var(--accent-soft);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+.search-submit:hover {
+  background: color-mix(in srgb, var(--accent) 24%, var(--surface));
 }
 .search-suggestions {
   margin-top: 24px;
@@ -158,6 +178,9 @@
   .search-dialog {
     padding: 25px 19px 28px;
   }
+  .search-dialog input {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 460px) {
@@ -171,4 +194,8 @@
   .search-submit {
     grid-column: 1/-1;
   }
+}
+
+.search-suggestions > button:hover {
+  background: color-mix(in srgb, var(--accent-soft) 40%, transparent);
 }

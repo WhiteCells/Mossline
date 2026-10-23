@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useId } from "react";
 import { Button } from "./Button";
 
 export interface PaginationProps {
@@ -33,6 +34,7 @@ export function Pagination({
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
 }: PaginationProps) {
+  const pageSizeLabelId = useId();
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(page, 1), pageCount);
   const first = total === 0 ? 0 : (safePage - 1) * pageSize + 1;
@@ -45,9 +47,10 @@ export function Pagination({
           显示 {first}–{last}，共 {total} 项
         </span>
         {onPageSizeChange && (
-          <label>
-            每页
+          <div className="ui-pagination__size">
+            <span id={pageSizeLabelId}>每页</span>
             <select
+              aria-labelledby={pageSizeLabelId}
               value={pageSize}
               onChange={(event) => onPageSizeChange(Number(event.target.value))}
             >
@@ -57,7 +60,7 @@ export function Pagination({
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         )}
       </div>
       <nav className="ui-pagination__pages" aria-label="分页">

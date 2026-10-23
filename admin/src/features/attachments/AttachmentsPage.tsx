@@ -1,3 +1,4 @@
+import { FieldLabel } from "../../shared/ui/FieldLabel";
 import { useEffect, useRef, useState, type Key } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -420,7 +421,7 @@ export function AttachmentsPage() {
         }
       >
         <div className="field">
-          <label htmlFor="attachment-name">文件名</label>
+          <FieldLabel htmlFor="attachment-name">文件名</FieldLabel>
           <input
             id="attachment-name"
             className="input"

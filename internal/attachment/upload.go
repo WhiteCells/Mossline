@@ -28,6 +28,8 @@ func adminURL(ownerType string, id uint64) string {
 		return "/admin/users"
 	case "friend":
 		return "/admin/friends"
+	case "site":
+		return "/admin/appearance"
 	case "about":
 		return "/admin/about"
 	}
@@ -162,7 +164,7 @@ func (s *Service) Upload(ctx context.Context, userID uint64, header *multipart.F
 
 func validOwnerType(v string) bool {
 	switch v {
-	case "post", "moment", "about", "user", "friend":
+	case "post", "moment", "about", "user", "friend", "site":
 		return true
 	}
 	return false

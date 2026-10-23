@@ -21,12 +21,18 @@
   --sage-soft: #e5ede6;
   --shadow-sm: 0 10px 30px rgba(89, 65, 75, 0.07);
   --shadow-lg: 0 24px 65px rgba(89, 65, 75, 0.12);
+  --focus-border: color-mix(in srgb, var(--muted) 38%, var(--line));
+  --selection: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  --dialog-overlay: rgba(30, 24, 30, 0.32);
+  --dialog-shadow: 0 20px 64px rgba(35, 24, 33, 0.16);
   --serif: 'Noto Serif SC', 'Songti SC', Georgia, serif;
   --header-height: 76px;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --dialog-overlay: rgba(8, 6, 10, 0.48);
+  --dialog-shadow: 0 20px 64px rgba(0, 0, 0, 0.3);
   --bg: #171519;
   --bg-soft: #201c20;
   --surface: #242025;

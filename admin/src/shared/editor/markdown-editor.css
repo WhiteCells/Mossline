@@ -1,4 +1,5 @@
-.markdown-editor {
+.markdown-editor,
+.attachment-picker__backdrop {
   --md-border: var(--admin-border, var(--border, #dfe3e8));
   --md-border-strong: var(--admin-border-strong, var(--border-strong, #c8ced8));
   --md-bg: var(--admin-surface, var(--card, #fff));
@@ -8,6 +9,9 @@
   --md-primary: var(--admin-primary, var(--primary, #147d64));
   --md-primary-soft: color-mix(in srgb, var(--md-primary) 12%, transparent);
   --md-danger: var(--admin-danger, var(--destructive, #c93434));
+}
+
+.markdown-editor {
   position: relative;
   color: var(--md-text);
   font: inherit;
@@ -46,7 +50,7 @@
 }
 
 .markdown-editor__heading .markdown-editor__dirty {
-  color: #ad6800;
+  color: var(--admin-warning, #ad6800);
 }
 
 .markdown-editor__shell {
@@ -54,14 +58,12 @@
   border: 1px solid var(--md-border);
   border-radius: 10px;
   background: var(--md-bg);
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease;
+  transition: border-color 0.18s ease;
 }
 
-.markdown-editor:focus-within .markdown-editor__shell {
-  border-color: var(--md-primary);
-  box-shadow: 0 0 0 3px var(--md-primary-soft);
+.markdown-editor:where(:has(textarea:focus)) .markdown-editor__shell {
+  border-color: var(--admin-focus-border);
+  box-shadow: none;
 }
 
 .markdown-editor--error .markdown-editor__shell {
@@ -307,6 +309,12 @@
   font-size: 12px;
 }
 
+.markdown-editor__upload-row input:focus {
+  border-color: var(--admin-focus-border);
+  outline: none;
+  box-shadow: none;
+}
+
 .markdown-editor__progress {
   position: relative;
   height: 5px;
@@ -485,12 +493,14 @@
 
 .attachment-picker__backdrop {
   position: fixed;
-  z-index: 100;
+  z-index: 1100;
   inset: 0;
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgb(8 15 24 / 55%);
+  background: var(--admin-overlay);
+  backdrop-filter: blur(3px);
+  animation: ui-fade-in 0.15s ease;
 }
 
 .attachment-picker {
@@ -502,7 +512,9 @@
   border-radius: 12px;
   color: var(--md-text);
   background: var(--md-bg);
-  box-shadow: 0 24px 80px rgb(0 0 0 / 26%);
+  border: 1px solid var(--md-border);
+  box-shadow: var(--admin-dialog-shadow);
+  animation: ui-modal-in 0.18s ease;
 }
 
 .attachment-picker__header {
@@ -528,7 +540,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 220px;
+  min-width: 0;
   flex: 1;
   max-width: 440px;
   height: 34px;
@@ -538,10 +550,15 @@
   border-radius: 7px;
   color: var(--md-muted);
   background: var(--md-bg);
+  transition: border-color 0.18s ease;
 }
 
-.attachment-picker__search:focus-within {
-  border-color: var(--md-primary);
+.attachment-picker__search:has(input:focus) {
+  border-color: var(--admin-focus-border);
+  box-shadow: none;
+}
+.attachment-picker__filters > button {
+  flex-shrink: 0;
 }
 .attachment-picker__search input {
   min-width: 0;
@@ -590,14 +607,11 @@
   background: var(--md-bg);
   text-align: left;
   cursor: pointer;
-  transition:
-    border-color 120ms ease,
-    transform 120ms ease;
+  transition: border-color 120ms ease;
 }
 
 .attachment-picker__item:hover {
-  border-color: var(--md-primary);
-  transform: translateY(-1px);
+  border-color: var(--admin-focus-border);
 }
 .attachment-picker__thumb {
   display: grid;
@@ -691,4 +705,9 @@
   .markdown-editor__progress > span {
     transition: none;
   }
+}
+
+/* 搜索容器承载焦点反馈，避免输入框再叠加一层全局描边。 */
+.attachment-picker__search input:focus-visible {
+  outline: none;
 }

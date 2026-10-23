@@ -977,6 +977,55 @@
         },
         "type": "object"
       },
+      "mossline_internal_content_SiteAppearance": {
+        "additionalProperties": false,
+        "properties": {
+          "desktop_background_url": {
+            "type": "string"
+          },
+          "mobile_background_url": {
+            "type": "string"
+          },
+          "overlay_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "desktop_background_url",
+          "mobile_background_url",
+          "overlay_enabled"
+        ],
+        "type": "object"
+      },
+      "mossline_internal_content_SiteAppearanceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "attachment_relation_key": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "desktop_background_url": {
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "mobile_background_url": {
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "overlay_enabled": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "desktop_background_url",
+          "mobile_background_url",
+          "overlay_enabled"
+        ],
+        "type": "object"
+      },
       "mossline_internal_content_StatusRequest": {
         "additionalProperties": false,
         "properties": {
@@ -1657,6 +1706,42 @@
           },
           "data": {
             "$ref": "#/components/schemas/mossline_internal_content_PostPage"
+          },
+          "error_code": {
+            "type": "string"
+          },
+          "errors": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "type": "object"
+          },
+          "msg": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "data",
+          "msg"
+        ],
+        "type": "object"
+      },
+      "mossline_internal_httpx_Response_mossline_internal_content_SiteAppearance": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/mossline_internal_content_SiteAppearance"
           },
           "error_code": {
             "type": "string"
@@ -4757,6 +4842,81 @@
         "summary": "创建或更新文章",
         "tags": [
           "文章"
+        ]
+      }
+    },
+    "/api/site/appearance": {
+      "get": {
+        "operationId": "get__api_site_appearance",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mossline_internal_httpx_Response_mossline_internal_content_SiteAppearance"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mossline_internal_httpx_Response_interface_{}"
+                }
+              }
+            },
+            "description": "请求失败；code 为 HTTP 状态码，error_code 为业务错误码"
+          }
+        },
+        "summary": "获取站点外观",
+        "tags": [
+          "站点外观"
+        ]
+      },
+      "put": {
+        "operationId": "put__api_site_appearance",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mossline_internal_content_SiteAppearanceInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mossline_internal_httpx_Response_mossline_internal_content_SiteAppearance"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mossline_internal_httpx_Response_interface_{}"
+                }
+              }
+            },
+            "description": "请求失败；code 为 HTTP 状态码，error_code 为业务错误码"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "更新站点外观",
+        "tags": [
+          "站点外观"
         ]
       }
     },

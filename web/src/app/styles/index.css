@@ -21,7 +21,7 @@
 @import '../../features/posts/ArticleDetailPage.css';
 @import '../../shared/ui/MarkdownContent.css';
 @import '../../features/posts/PostSkeleton.css';
-@import '../../features/home/DiscoverSection.css';
+@import '../../features/home/HomePage.css';
 @import '../layout/Footer.css';
 @import '../../features/posts/SearchDialog.css';
 @import 'accessibility.css';

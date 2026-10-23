@@ -1,3 +1,4 @@
+import { FieldLabel } from "../../shared/ui/FieldLabel";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Eye, Save, Send } from "lucide-react";
@@ -294,10 +295,10 @@ export function PostEditorPage() {
           <section className="form-section">
             <div className="form-grid">
               <div className="field field--full">
-                <label htmlFor="post-title">
+                <FieldLabel htmlFor="post-title">
                   标题<span className="required">*</span>
                   <small>{form.title.length}/120</small>
-                </label>
+                </FieldLabel>
                 <input
                   id="post-title"
                   className="input input--title"
@@ -317,9 +318,9 @@ export function PostEditorPage() {
                 )}
               </div>
               <div className="field field--full">
-                <label htmlFor="post-desc">
+                <FieldLabel htmlFor="post-desc">
                   摘要<small>{form.desc.length}/300</small>
-                </label>
+                </FieldLabel>
                 <textarea
                   id="post-desc"
                   className="textarea"
@@ -367,7 +368,7 @@ export function PostEditorPage() {
             <h2 className="form-section-title">SEO 与分享</h2>
             <div className="form-grid">
               <div className="field">
-                <label htmlFor="seo-title">SEO 标题</label>
+                <FieldLabel htmlFor="seo-title">SEO 标题</FieldLabel>
                 <input
                   id="seo-title"
                   className="input"
@@ -381,7 +382,7 @@ export function PostEditorPage() {
                 />
               </div>
               <div className="field">
-                <label htmlFor="cover">封面地址</label>
+                <FieldLabel htmlFor="cover">封面地址</FieldLabel>
                 <input
                   id="cover"
                   className="input"
@@ -396,7 +397,7 @@ export function PostEditorPage() {
                 />
               </div>
               <div className="field field--full">
-                <label htmlFor="seo-description">SEO 描述</label>
+                <FieldLabel htmlFor="seo-description">SEO 描述</FieldLabel>
                 <textarea
                   id="seo-description"
                   className="textarea"
@@ -417,7 +418,7 @@ export function PostEditorPage() {
             <h2 className="form-section-title">发布设置</h2>
             <div className="form-stack">
               <div className="field">
-                <label htmlFor="post-status">状态</label>
+                <FieldLabel htmlFor="post-status">状态</FieldLabel>
                 <select
                   id="post-status"
                   className="select"
@@ -436,7 +437,7 @@ export function PostEditorPage() {
                 </select>
               </div>
               <div className="field">
-                <label htmlFor="publish-time">发布时间</label>
+                <FieldLabel htmlFor="publish-time">发布时间</FieldLabel>
                 <input
                   id="publish-time"
                   className="input"
@@ -473,7 +474,7 @@ export function PostEditorPage() {
             <h2 className="form-section-title">分类与标签</h2>
             <div className="form-stack">
               <div className="field">
-                <label htmlFor="post-category">分类</label>
+                <FieldLabel htmlFor="post-category">分类</FieldLabel>
                 <select
                   id="post-category"
                   className="select"
@@ -522,9 +523,9 @@ export function PostEditorPage() {
           <section className="form-section">
             <h2 className="form-section-title">固定链接</h2>
             <div className="field">
-              <label htmlFor="slug">
+              <FieldLabel htmlFor="slug">
                 Slug<span className="required">*</span>
-              </label>
+              </FieldLabel>
               <input
                 id="slug"
                 className="input"

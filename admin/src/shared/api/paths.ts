@@ -11,6 +11,7 @@ export const apiPaths = {
   moments: "/api/moment",
   friends: "/api/friend",
   attachments: "/api/attachment",
+  appearance: "/api/site/appearance",
   about: "/api/about",
   logs: "/api/log",
 } as const;

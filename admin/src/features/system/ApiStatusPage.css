@@ -1,6 +1,6 @@
 .capability-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 13px;
 }
 .capability-card {
@@ -23,8 +23,8 @@
   width: 18px;
 }
 .capability-card .is-ok {
-  color: #548366;
-  background: #e2efe5;
+  color: var(--admin-success);
+  background: var(--admin-success-soft);
 }
 .capability-card .is-error {
   color: var(--danger);

@@ -1,11 +1,22 @@
+import { FieldLabel } from "../../shared/ui/FieldLabel";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, Leaf, LockKeyhole, UserRound } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Leaf,
+  LockKeyhole,
+  Moon,
+  Sun,
+  UserRound,
+} from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useAdminTheme } from "../../shared/hooks/useAdminTheme";
 import { useAuth } from "./AuthContext";
 import { Button } from "../../shared/ui/Button";
 import { messageFromError } from "../../shared/utils/normalize";
 
 export function LoginPage() {
+  const { theme, toggleTheme } = useAdminTheme();
   const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,6 +50,19 @@ export function LoginPage() {
 
   return (
     <main className="login-page">
+      <div className="login-toolbar">
+        <a href="/">
+          <ArrowLeft aria-hidden="true" /> 返回首页
+        </a>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={theme === "dark" ? "切换至浅色主题" : "切换至深色主题"}
+          onClick={toggleTheme}
+        >
+          {theme === "dark" ? <Sun /> : <Moon />}
+        </Button>
+      </div>
       <section className="login-story" aria-hidden="true">
         <div className="login-brand">
           <span>
@@ -69,7 +93,7 @@ export function LoginPage() {
           <h1>登录管理端</h1>
           <p className="login-intro">管理文章、动态与站点内容。</p>
           <div className="field">
-            <label htmlFor="username">用户名</label>
+            <FieldLabel htmlFor="username">用户名</FieldLabel>
             <div className="input-with-icon">
               <UserRound />
               <input
@@ -79,12 +103,13 @@ export function LoginPage() {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 aria-invalid={Boolean(error)}
+                aria-describedby={error ? "login-error" : undefined}
                 autoFocus
               />
             </div>
           </div>
           <div className="field">
-            <label htmlFor="password">密码</label>
+            <FieldLabel htmlFor="password">密码</FieldLabel>
             <div className="input-with-icon">
               <LockKeyhole />
               <input
@@ -95,11 +120,12 @@ export function LoginPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 aria-invalid={Boolean(error)}
+                aria-describedby={error ? "login-error" : undefined}
               />
             </div>
           </div>
           {error && (
-            <div className="login-error" role="alert">
+            <div id="login-error" className="login-error" role="alert">
               {error}
             </div>
           )}
@@ -112,9 +138,7 @@ export function LoginPage() {
           >
             登录
           </Button>
-          <small className="login-help">
-            登录接口：POST /api/login。首次使用前请先在后端创建管理员账号。
-          </small>
+          <small className="login-help">循着时间的纹理，继续今天的书写。</small>
         </form>
       </section>
     </main>
